@@ -8,6 +8,10 @@ body{
 /* 顶部 */
 .top{
 	background-color: rgb(51,51,51);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
 }
 
 .top img{
