@@ -16,5 +16,4 @@
 
 ### 笔记
 
-[任务笔记](https://github.com/soulclearm/Learn_front_end/tree/dev/notes)
-
+[任务笔记](http://www.jianshu.com/users/cbd5ca062ece/latest_articles))
