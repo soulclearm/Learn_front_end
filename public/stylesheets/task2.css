@@ -13,6 +13,7 @@ body{
 	top: 0px;
 	left: 0px;
 	right: 0px;
+	resize: vertical;
 }
 
 .top img{
@@ -22,9 +23,9 @@ body{
 }
 
 .top ul{
-	display: inline-block;
+	/*display: inline-block;*/
 	float:right;
-	list-style: outside none disc;
+	/*list-style: outside none disc;*/
 }
 
 .top ul li{
@@ -46,6 +47,10 @@ body{
 
 .top a:active{
 	color:rgb(0,0,255);
+}
+
+main{
+	margin-top: 80px;
 }
 
 /* 正文 */
