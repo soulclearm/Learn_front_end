@@ -1,0 +1,396 @@
+body, html, div {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	min-width: 1280px;
+}
+
+/* 顶部 */
+header {
+	width: 95%;
+	margin: 0 auto;
+	padding: 10px;
+	overflow: auto;
+}
+
+.top_left {
+	float: left;
+}
+
+.top_left span {
+	font-weight: bold;
+	position: relative;
+	font-size: 25px;
+	top: -4px;
+}
+
+.top_right {
+	float: right;
+}
+
+.top_right a {
+	font-weight: normal;
+	text-decoration: none;
+	display: inline-block;
+	width: 4em;
+	height: 1.5em;
+	padding: 5px;
+	text-align: center;
+}
+
+.top_right a:link {
+	color: gray;
+}
+
+.top_right a:visited {
+	color: gray;
+}
+
+.top_right a:hover, .top_right a:first-child {
+	color: red;
+	border-bottom: 3px solid red;
+}
+
+.top_right a:active {
+	color: yellow;
+}
+
+.top_right a:last-child {
+	color: red;
+	background: url(../images/task7/header-user.png) no-repeat 5px 5px;
+}
+
+/* 开始体验 */
+.start {
+	background: url(../images/task7/slogan-bg.png) no-repeat;
+	background-size: cover;
+	height: 690px;
+	padding: 200px 0 0 120px;
+}
+
+.start h1 {
+	font-family: "黑体";
+	font-size: 60px;
+	color: white;
+}
+
+.start p {
+	font-size: 30px;
+	color: white;
+}
+
+.start input {
+	color: white;
+	background-color: #e74f4d;
+	font-size: 40px;
+	border: none;
+	padding: 15px 50px;
+	margin-top: 30px;
+}
+
+/* 功能介绍 */
+.feature_tips {
+	height: 200px;
+}
+
+.feature_tips div {
+	width: 25%;
+	height: 50px;
+	float: left;
+	padding-top: 150px;
+	position: relative;
+}
+
+.feature_tips div:nth-of-type(1) {
+	background: url(../images/task7/advancement-1.png) no-repeat;
+	background-position: center 50px;
+}
+
+.feature_tips div:nth-of-type(2) {
+	background: url(../images/task7/advancement-2.png) no-repeat;
+	background-position: center 50px;
+}
+
+.feature_tips div:nth-of-type(3) {
+	background: url(../images/task7/advancement-3.png) no-repeat;
+	background-position: center 50px;
+}
+
+.feature_tips div:nth-of-type(4) {
+	background: url(../images/task7/advancement-4.png) no-repeat;
+	background-position: center 50px;
+}
+
+.feature_tips div p {
+	width: 200px;
+	position: absolute;
+	left: 50%;
+	bottom: 20%;
+	transform: translate(-50%,50%);
+	color: #aba6a5;
+}
+
+/* 关于 */
+.about {
+	background-color: rgb(237,237,237);
+	height: 300px;
+	text-align: center;
+}
+
+.about img {
+	margin-top: 40px;
+	margin-bottom: 30px;
+}
+
+.about p {
+	font-family: "微软雅黑";
+	font-size: 30px;
+	color: rgb(160,160,160);
+}
+
+.city {
+	height: 290px;
+	padding-top: 50px;
+	background: url(../images/task7/search-bg.jpg) no-repeat;
+	background-size: cover;
+	font-family: "微软雅黑";
+	color: #ffffff;
+	text-align: center;
+	line-height: 150%;
+}
+
+.city form {
+	margin-top: 40px;
+}
+
+.city select, .city input {
+	width: 240px;
+	height: 36px;
+	margin-right: 25px;
+	border: none;
+}
+
+.city select {
+	border: 1px solid #fff;
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	background: #fff url(../images/task7/select-bg.png) no-repeat scroll right 10px center;
+	padding: 0 20px 0 15px;
+	color: #aba6a5;
+}
+
+.city input {
+	background-color: #bf4f49;
+}
+
+.activity {
+	height: 390px;
+	padding: 100px;
+	background-color: rgb(247,247,247);
+}
+
+.activity div {
+	float: left;
+	width: 25%;
+	text-align: center;
+}
+
+.activity div * {
+	position: relative;
+}
+
+.new_world {
+	overflow: auto;
+}
+
+.new_world .left {
+	color: white;
+	text-align: center;
+	float: left;
+	width: 800px;
+	height: 400px;
+	padding-top: 100px;
+	background-image: url(../images/task7/slide.jpg);
+}
+
+.new_world .right {
+	margin-left: 800px;
+	padding: 100px 10px 0 10px;
+	text-align: center;
+}
+
+.new_world .right span {
+	color: red;
+}
+
+.new_world .right div {
+	text-align: left;
+	color: gray;
+	line-height: 150%;
+	margin: 30px 60px;
+}
+
+.new_world .right input[type="button"] {
+	width: 180px;
+	height: 40px;
+	margin-bottom: 40px;
+	border: 1px solid rgb(232,80,80);
+	background-color: white;
+	color: rgb(232,80,80);
+}
+
+.more {
+	display: table;
+	height: 500px;
+	width: 100%;
+}
+
+.more div {
+	width: 33%;
+	height: 500px;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+	line-height: 150%;
+	font-size: 25px;
+}
+
+.more span {
+	border-bottom: 3px solid white;
+	position: relative;
+	top: -30px;
+}
+
+.more .middle span {
+	border-bottom: 3px solid gray;
+}
+
+.more .left input {
+	border: 2px solid white;
+	width: 160px;
+	height: 40px;
+	color: white;
+	background-color: rgb(232,80,79);
+}
+
+.more .middle input {
+	border: 2px solid rgb(232,80,79);
+	width: 160px;
+	height: 40px;
+	color: rgb(232,80,79);
+	background-color: white;
+}
+
+.more .left {
+	background-color: rgb(232,80,79);
+	color: white;
+}
+
+.more .middle {
+	background-color: white;
+	color: black;
+}
+
+.more .right {
+	background: url(../images/task7/model2.png) no-repeat;
+}
+
+.last .top, .last .bottom {
+	padding: 60px 0 30px 0;
+	text-align: center;
+}
+
+.last .top h2,.last .bottom h3 {
+	color: rgb(104,104,104);
+}
+
+.last .top p, .last .bottom p {
+	color: rgb(214,214,214);
+}
+
+.last .left {
+	float: left;
+	width: 500px;
+	padding: 30px;
+}
+
+.last .right {
+	margin-left: 540px;
+	padding: 30px;
+}
+
+.last .right form, .last table{
+	text-align: center;
+}
+
+.last table {
+	width: 100%;
+}
+
+.last table td {
+	text-align: center;
+}
+
+.last .right input {
+	width: 90%;
+	height: 40px;
+	margin: 10px;
+	background-color: rgb(237,237,239);
+	border: none;
+}
+
+.last .right textarea {
+	width: 95%;
+	height: 120px;
+	background-color: rgb(237,237,239);
+	border: none;
+}
+
+.last input[type="button"] {
+	width: 95%;
+}
+
+footer {
+	background-color: #33363f;
+	padding: 50px 0 0 0;
+	text-align: center;
+	color: white;
+}
+
+footer input[type="email"] {
+	width: 400px;
+	height: 35px;
+	border: none;
+}
+
+footer input[type="submit"] {
+	width: 80px;
+	height: 35px;
+	border: none;
+	background-color: rgb(113,113,121);
+}
+
+footer .bottom {
+	background-color: rgb(48,48,48);
+	height: 80px;
+	line-height: 80px;
+	margin-top: 80px;
+}
+
+footer .bottom span, footer .bottom a {
+	color: white;
+	font-weight: normal;
+	text-decoration: none;
+	margin: 0 90px;
+}
+
+footer .bottom span {
+	float: left;
+}
+
+footer .bottom a {
+	float: right;
+}
