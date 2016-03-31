@@ -3,7 +3,8 @@
 	margin: 0px;
 }
 
-.flex, .flex > div {
+.flex,
+.flex > div {
 	box-sizing: border-box;
 }
 
@@ -42,7 +43,6 @@
 	.flex_item4 {
 		order: -1;
 	}
-
 	.flex {
 		flex-wrap: wrap;
 		align-items: flex-start;
