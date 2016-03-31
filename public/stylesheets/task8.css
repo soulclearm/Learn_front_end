@@ -19,6 +19,9 @@ div {
 	border: 1px solid #999;
 	background-color: #eee;
 	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	color: purple;
 }
 
 [class*='col-'] {
