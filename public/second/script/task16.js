@@ -13,19 +13,19 @@ var aqiData = {};
  * 然后渲染aqi-list列表，增加新增的数据
  */
 function addAqiData() {
-	var inputCity = document.getElementById("aqi-city-input");
-	var inputAqi = document.getElementById("aqi-value-input");
+	var strCity = document.getElementById("aqi-city-input").value.trim();
+	var strAqi = document.getElementById("aqi-value-input").value.trim();
 
-	if (!inputCity.value.match(/^[A-Za-z\u4E00-\u9FA5]+$/)) {
+	if (!strCity.match(/^[A-Za-z\u4E00-\u9FA5]+$/)) {
 		alert("城市名必须为中英文字符！");
 		return;
 	}
-	if (!inputAqi.value.match(/^\d+$/)) {
+	if (!strAqi.match(/^\d+$/)) {
 		alert("空气质量指数必须为整数！");
 		return;
 	}
 
-	aqiData[inputCity.value] = inputAqi.value;
+	aqiData[strCity] = strAqi;
 }
 
 /**
@@ -34,21 +34,10 @@ function addAqiData() {
 function renderAqiList() {
 	var table = document.getElementById("aqi-table");
 	table.innerHTML = "";
-	if (aqiData !== {}) {
-		var tr = document.createElement("tr");
-		var td1 = document.createElement("td");
-		td1.innerHTML = "城市";
-		tr.appendChild(td1);
-		var td2 = document.createElement("td");
-		td2.innerHTML = "空气质量";
-		tr.appendChild(td2);
-		var td3 = document.createElement("td");
-		td3.innerHTML = "操作";
-		tr.appendChild(td3);
-		table.appendChild(tr);
-	}
-
-	for (strCity in aqiData) {
+	for (var strCity in aqiData) {
+		if (table.children.length === 0) {
+			table.innerHTML = "<tr> <td>城市</td> <td>空气质量</td> <td>操作</td> </tr>"
+		}
 		var tr = document.createElement("tr");
 		var td1 = document.createElement("td");
 		td1.innerHTML = strCity;
