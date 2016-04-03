@@ -53,10 +53,34 @@ var pageState = {
 }
 
 /**
+ * 获取柱子背景
+ */
+
+var colors = ['#16324a', '#24385e', '#393f65', '#4e4a67', '#5a4563', '#b38e95',
+	'#edae9e', '#c1b9c2', '#bec3cb', '#9ea7bb', '#99b4ce', '#d7f0f8'
+];
+
+/**
  * 渲染图表
  */
 function renderChart() {
+	var divContainer = document.getElementsByClassName("aqi-chart-wrap")[0];
+	divContainer.style.cssText = "border:2px solid yellow; width: 90%; height: 550px;" +
+		"display: flex; justify-content: center;align-items: flex-end; align-content:center;" +
+		"margin: 10px auto; padding: 10px;";
+	divContainer.innerHTML = "";
 
+	for (var date in chartData) {
+		var aqiValue = chartData[date];
+		var div = document.createElement("div");
+		div.style.backgroundColor = "blue";
+		div.style.heght = aqiValue + "px";
+		// div.style.width = 10px;
+		// div.innerHTML = aqiValue;
+		divContainer.innerHTML += "<div style = 'background-color:" + colors[Math.floor(aqiValue / 50)] +
+			"; margin:0 1px; width: 100px;" +
+			"height:" + aqiValue + "px;' title =" + (date + "空气质量：" + aqiValue) + "></div>";
+	}
 }
 
 /**
@@ -64,10 +88,14 @@ function renderChart() {
  */
 function graTimeChange() {
 	// 确定是否选项发生了变化 
-
+	if (pageState.nowGraTime === this.value) {
+		return;
+	}
 	// 设置对应数据
-
+	pageState.nowGraTime = this.value;
+	initAqiChartData();
 	// 调用图表渲染函数
+	renderChart();
 }
 
 /**
@@ -75,17 +103,25 @@ function graTimeChange() {
  */
 function citySelectChange() {
 	// 确定是否选项发生了变化 
-
+	if (this[this.selectedIndex].value === pageState.nowSelectCity) {
+		return;
+	}
 	// 设置对应数据
-
+	pageState.nowSelectCity = this[this.selectedIndex].value;
+	initAqiChartData();
 	// 调用图表渲染函数
+	renderChart();
 }
 
 /**
  * 初始化日、周、月的radio事件，当点击时，调用函数graTimeChange
  */
 function initGraTimeForm() {
+	var inputs = document.getElementById("form-gra-time").getElementsByTagName("input");
 
+	for (var i = inputs.length - 1; i >= 0; i--) {
+		inputs[i].onclick = graTimeChange;
+	}
 }
 
 /**
@@ -93,9 +129,17 @@ function initGraTimeForm() {
  */
 function initCitySelector() {
 	// 读取aqiSourceData中的城市，然后设置id为city-select的下拉列表中的选项
-
+	var ops = "";
+	for (var cityName in aqiSourceData) {
+		if (pageState.nowSelectCity === -1) {
+			pageState.nowSelectCity = cityName;
+		}
+		ops += "<option>" + cityName + "</option>"
+	}
+	var citySelect = document.getElementById("city-select");
+	citySelect.innerHTML = ops;
 	// 给select设置事件，当选项发生变化时调用函数citySelectChange
-
+	citySelect.onchange = citySelectChange;
 }
 
 /**
@@ -104,6 +148,73 @@ function initCitySelector() {
 function initAqiChartData() {
 	// 将原始的源数据处理成图表需要的数据格式
 	// 处理好的数据存到 chartData 中
+	var cityAqiData = aqiSourceData[pageState.nowSelectCity];
+
+	if (pageState.nowGraTime === "day") {
+		chartData = cityAqiData;
+	}
+
+	if (pageState.nowGraTime === "week") {
+		chartData = {};
+		var aqiSum = 0;
+		var dayNum = 0;
+		var strStartDate = "";
+		for (var strdate in cityAqiData) {
+			var date = new Date(strdate);
+			var day = date.getDay();
+			// 一周从周日开始，也就是day为0
+			if (day === 0) {
+				if (aqiSum > 0) {
+					var aqi = Math.floor(aqiSum / dayNum);
+					var key = strStartDate + "-" + strdate + "平均";
+					chartData[key] = aqi;
+				}
+				dayNum = 0;
+				aqiSum = 0;
+				strStartDate = strdate;
+			} else {
+				if (strStartDate === "") {
+					strStartDate = strdate;
+				}
+			}
+			dayNum++;
+			aqiSum += cityAqiData[strdate];
+		}
+
+		if (aqiSum > 0) {
+			var aqi = Math.floor(aqiSum / dayNum);
+			var key = strStartDate + "-" + strdate + "平均";
+			chartData[key] = aqi;
+		}
+	}
+
+	if (pageState.nowGraTime === "month") {
+		chartData = {};
+		var curMonth = -1;
+		var dayNum = 0;
+		var aqiSum = 0;
+		for (var strdate in cityAqiData) {
+			var date = new Date(strdate);
+			var month = date.getMonth();
+			if (month !== curMonth) {
+				if (dayNum > 0) {
+					var aqi = Math.floor(aqiSum / dayNum);
+					var key = date.getFullYear() + "年" + date.getMonth() + "月" + "平均";
+					chartData[key] = aqi;
+				}
+				curMonth = month;
+				dayNum = 0;
+				aqiSum = 0;
+			}
+			dayNum++;
+			aqiSum += cityAqiData[strdate];
+		}
+		if (dayNum > 0) {
+			var aqi = Math.floor(aqiSum / dayNum);
+			var key = date.getFullYear() + "年" + (date.getMonth() + 1) + "月" + "平均";
+			chartData[key] = aqi;
+		}
+	}
 }
 
 /**
@@ -113,6 +224,8 @@ function init() {
 	initGraTimeForm()
 	initCitySelector();
 	initAqiChartData();
+
+	renderChart();
 }
 
-init();
+window.onload = init;
