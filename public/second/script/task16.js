@@ -50,8 +50,6 @@ function renderAqiList() {
 		tr.appendChild(td3);
 		table.appendChild(tr);
 	}
-
-	init();
 }
 
 /**
@@ -67,12 +65,11 @@ function addBtnHandle() {
  * 点击各个删除按钮的时候的处理逻辑
  * 获取哪个城市数据被删，删除数据，更新表格显示
  */
-function delBtnHandle() {
+function delBtnHandle(target) {
 	// do sth.
-	var tr = this.parentElement.parentElement;
+	var tr = target.parentElement.parentElement;
 	var strCity = tr.children[0].innerHTML;
 	delete aqiData[strCity];
-	console.log(strCity);
 	renderAqiList();
 }
 
@@ -86,10 +83,11 @@ function init() {
 	var table = document.getElementById("aqi-table");
 	var arrBtnDel = table.getElementsByClassName("del-btn");
 
-	for (var i = 0; i < arrBtnDel.length; i++) {
-		var btn = arrBtnDel[i];
-		btn.onclick = delBtnHandle;
-	}
+	table.addEventListener("click", function(e) {
+		if (e.target && e.target.nodeName === "BUTTON") {
+			delBtnHandle(e.target);
+		}
+	})
 }
 
 init();
