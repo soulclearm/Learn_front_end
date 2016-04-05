@@ -1,0 +1,31 @@
+#ctrls button {
+	border: none;
+}
+
+#leftIn,
+#rightIn {
+	background-color: pink;
+}
+
+#leftOut,
+#rightOut {
+	background-color: red;
+}
+
+#numContainer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	min-width: 1320px;
+}
+
+#numContainer b {
+	width: 20px;
+	height: 50px;
+	margin: 1px;
+	text-align: center;
+	background-color: pink;
+	color: white;
+	text-shadow: gray;
+	font-size: 6px;
+}
