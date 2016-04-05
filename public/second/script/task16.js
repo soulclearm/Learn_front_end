@@ -36,7 +36,7 @@ function renderAqiList() {
 	table.innerHTML = "";
 	for (var strCity in aqiData) {
 		if (table.children.length === 0) {
-			table.innerHTML = "<tr> <td>城市</td> <td>空气质量</td> <td>操作</td> </tr>"
+			table.innerHTML = "<tr> <td>城市</td> <td>空气质量</td> <td>操作</td> </tr>";
 		}
 		var tr = document.createElement("tr");
 		var td1 = document.createElement("td");

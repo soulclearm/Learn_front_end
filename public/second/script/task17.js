@@ -22,7 +22,7 @@ function getDateStr(dat) {
 function randomBuildData(seed) {
 	var returnData = {};
 	var dat = new Date("2016-01-01");
-	var datStr = ''
+	var datStr = '';
 	for (var i = 1; i < 92; i++) {
 		datStr = getDateStr(dat);
 		returnData[datStr] = Math.ceil(Math.random() * seed);
@@ -74,7 +74,6 @@ function renderChart() {
 		var aqiValue = chartData[date];
 		var div = document.createElement("div");
 		div.style.backgroundColor = "blue";
-		div.style.heght = aqiValue + "px";
 		// div.style.width = 10px;
 		// div.innerHTML = aqiValue;
 		divContainer.innerHTML += "<div style = 'background-color:" + colors[Math.floor(aqiValue / 50)] +
@@ -134,7 +133,7 @@ function initCitySelector() {
 		if (pageState.nowSelectCity === -1) {
 			pageState.nowSelectCity = cityName;
 		}
-		ops += "<option>" + cityName + "</option>"
+		ops += "<option>" + cityName + "</option>";
 	}
 	var citySelect = document.getElementById("city-select");
 	citySelect.innerHTML = ops;

@@ -43,16 +43,16 @@ function onBtnRightOut() {
 }
 
 function onNum(numDiv) {
-	var index = arrNum.indexOf(numDiv.innerHTML);
+	var index = [].indexOf.call(numDiv.parentElement.children, numDiv);
 	arrNum.splice(index, 1);
 	renderNums();
 }
 
 function addEvents() {
-	document.getElementById("leftIn").addEventListener("click", onBtnLeftIn)
-	document.getElementById("rightIn").addEventListener("click", onBtnRightIn)
-	document.getElementById("leftOut").addEventListener("click", onBtnLeftOut)
-	document.getElementById("rightOut").addEventListener("click", onBtnRightOut)
+	document.getElementById("leftIn").addEventListener("click", onBtnLeftIn);
+	document.getElementById("rightIn").addEventListener("click", onBtnRightIn);
+	document.getElementById("leftOut").addEventListener("click", onBtnLeftOut);
+	document.getElementById("rightOut").addEventListener("click", onBtnRightOut);
 	document.getElementById("numContainer").addEventListener("click", function(event) {
 		if (event.target && event.target.className === "num") {
 			onNum(event.target);
@@ -64,7 +64,7 @@ function renderNums() {
 	var items = "";
 	for (var idx in arrNum) {
 		items += "<div class = 'num' style='background-color: pink; margin: 3px; width: 2em; height: 2em;" +
-			" display: inline-block; text-align: center; line-height: 2em;'>" + arrNum[idx] + "</div>"
+			" display: inline-block; text-align: center; line-height: 2em;'>" + arrNum[idx] + "</div>";
 	}
 	document.getElementById("numContainer").innerHTML = items;
 }
