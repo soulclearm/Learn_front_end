@@ -23,6 +23,10 @@ function onBtnRightIn() {
 function onBtnLeftOut() {
 	// alert("删除左边第一个数字" + arrNum.shift());
 	// renderNums();
+	if (!arrNum[0]) {
+		alert("没有数字可以删除");
+		return;
+	}
 
 	var flag = confirm("删除左边第一个数字" + arrNum[0] + "吗？");
 	if (flag) {
@@ -34,6 +38,10 @@ function onBtnLeftOut() {
 function onBtnRightOut() {
 	// alert("删除右边第一个数字" + arrNum.pop());
 	// renderNums();
+	if (!arrNum[0]) {
+		alert("没有数字可以删除");
+		return;
+	}
 
 	var flag = confirm("删除右边第一个数字" + arrNum[arrNum.length - 1] + "吗？");
 	if (flag) {
