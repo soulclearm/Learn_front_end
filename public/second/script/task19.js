@@ -13,7 +13,7 @@ window.onload = function(argument) {
 	// 随机生成长度为60的，10到100间的数组
 	function randomBuildData() {
 		arrData = [];
-		for (var i = 0; i < 60; i++) {
+		for (var i = 0; i < 150; i++) {
 			var num = Math.ceil(Math.random() * 91 + 9);
 			arrData.push(num);
 		}
@@ -75,7 +75,7 @@ window.onload = function(argument) {
 	}
 
 	function getSpeed() {
-		var speed = parseInt($('#speedInput').value.trim()) || 30;
+		var speed = parseInt($('#speedInput').value.trim()) || 10;
 		$('#speedInput').value = speed;
 		return speed;
 	}
