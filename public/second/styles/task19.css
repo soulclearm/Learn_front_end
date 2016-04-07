@@ -17,9 +17,11 @@
 	flex-wrap: wrap;
 	align-items: flex-end;
 	min-width: 1320px;
+	height: 240px;
 }
 
 #numContainer b {
+	box-sizing: border-box;
 	width: 20px;
 	height: 50px;
 	margin: 1px;
@@ -28,4 +30,6 @@
 	color: white;
 	text-shadow: gray;
 	font-size: 6px;
+	background-color: white;
+	transition: 500ms height;
 }
