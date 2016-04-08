@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>task20</title>
+		<meta charset="UTF-8">
+		<style type="text/css">
+		#result {
+			display: flex;
+		}
+		
+		#result div {
+			background-color: pink;
+			height: 30px;
+			line-height: 30px;
+			min-width: 30px;
+			text-align: center;
+			margin: 5px;
+		}
+		
+		#result span {
+			background-color: red;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div class="ctrl">
+			<textarea rows="5" cols="20" placeholder="请输入字符并用不同符号分隔" id="textArea"></textarea>
+			<button id="insert">插入</button>
+			<button id="search">查询</button>
+			<input id="searchInput"></input>
+		</div>
+		<div id="result"></div>
+		<script type="text/javascript">
+		$ = function(el) {
+			return document.querySelector(el);
+		}
+
+		var arrData = [];
+
+		$('#insert').onclick = function() {
+			var str = $('#textArea').value.trim();
+			var arrWord = str.split(/[^0-9a-zA-Z\u4e00-\u9fa5]+/).filter(function(e) {
+				if (e != null && e.length > 0) {
+					return true;
+				} else {
+					return false;
+				}
+			});
+			arrData = arrData.concat(arrWord);
+
+			render();
+		}
+
+		$('#search').onclick = function() {
+			var str = $('#searchInput').value.trim();
+			render(str);
+		}
+
+		function render(str) {
+			$('#result').innerHTML = arrData.map(function(d) {
+				var r = d;
+				if (str != null && str.length > 0) {
+					r = r.replace(new RegExp(str, "g"), "<span class='select'>" + str + "</span>");
+				}
+				return "<div>" + r + "</div>";
+				return '<div>' + d + '</div>';
+			}).join('');
+		}
+		</script>
+	</body>
+
+</html>
