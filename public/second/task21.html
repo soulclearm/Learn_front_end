@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>task21</title>
+		<meta charset="UTF-8">
+		<style type="text/css">
+		* {
+			font-size: 25px;
+		}
+		
+		#tagShow b,
+		#hobbyShow b {
+			display: inline-block;
+			padding: 5px;
+			margin: 5px;
+			background-color: rgb(139, 202, 255);
+			color: white;
+		}
+		
+		#tagShow b:hover {
+			background-color: red;
+		}
+		</style>
+	</head>
+
+	<body>
+		<article id="tags">
+			Tag:
+			<input type="text" placeholder="请输入tag如nodejs" id="tagInput"></input>
+			<div id="tagShow"></div>
+		</article>
+		<hr />
+		<article id="hobbys">
+			<textarea placeholder="请输入兴趣爱好" rows="3" cols="15" id="hobbyInput">足球，篮球 跳舞；唱歌 lol dota 式</textarea>
+			<br />
+			<button id="sureHobby">确认兴趣爱好</button>
+			<div id="hobbyShow"></div>
+		</article>
+		<script type="text/javascript">
+		$ = function(el) {
+			return document.querySelector(el);
+		}
+
+		// 处理tag相关的
+		var arrTags = [];
+
+		$('#tagInput').addEventListener('keyup', function(event) {
+			var str = event.target.value;
+			if (str.match(/[\r| |\,|\，]$/) || event.keyCode === 13) {
+				if (str.trim().length <= 0) {
+					return;
+				}
+				// 去重
+				if (arrTags.indexOf(str.trim()) >= 0) {
+					alert('已经有相同标签');
+					return;
+				}
+				if (arrTags.length >= 10) {
+					arrTags.shift();
+				}
+				arrTags.push(str.trim());
+				event.target.value = '';
+				renderTags();
+			}
+		})
+
+		$('#tagShow').addEventListener('mouseover', function(e) {
+			if (e.target && e.target.tagName === 'B') {
+				var originHTML = e.target.innerHTML;
+				e.target.innerHTML = '删除' + originHTML;
+				e.target.addEventListener('mouseout', function() {
+					e.target.innerHTML = originHTML;
+				})
+				e.target.addEventListener('click', function() {
+					var idx = [].indexOf.call(e.target.parentElement.children, e.target);
+					arrTags.splice(idx, 1);
+					renderTags();
+				})
+			}
+		})
+
+		function renderTags() {
+			$('#tagShow').innerHTML = arrTags.map(function(e) {
+				return '<b>' + e + '</b>';
+			}).join('');
+		}
+
+		// 处理兴趣相关的
+		var arrHobbys = [];
+		$('#sureHobby').addEventListener('click', function() {
+			var strHobbys = $('#hobbyInput').value.trim();
+			var arr = strHobbys.split(/[　，．； ,.;、\s\n]+/);
+			console.log(arr);
+			for (var i = 0; i < arr.length; i++) {
+				var str = arr[i].trim();
+				if (str.length <= 0) {
+					continue;
+				}
+				if (arrHobbys.length >= 10) {
+					arrHobbys.shift();
+				}
+				// 去重
+				if (arrHobbys.indexOf(str) >= 0) {
+					return;
+				}
+				arrHobbys.push(str);
+			}
+
+			$('#hobbyShow').innerHTML = arrHobbys.map(function(e) {
+				return '<b>' + e + '</b>';
+			}).join('');
+		})
+		</script>
+	</body>
+
+</html>
