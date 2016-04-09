@@ -90,6 +90,7 @@
 		var arrHobbys = [];
 		$('#sureHobby').addEventListener('click', function() {
 			var strHobbys = $('#hobbyInput').value.trim();
+			$('#hobbyInput').value = '';
 			var arr = strHobbys.split(/[　，．； ,.;、\s\n]+/);
 			console.log(arr);
 			for (var i = 0; i < arr.length; i++) {
@@ -97,12 +98,12 @@
 				if (str.length <= 0) {
 					continue;
 				}
-				if (arrHobbys.length >= 10) {
-					arrHobbys.shift();
-				}
 				// 去重
 				if (arrHobbys.indexOf(str) >= 0) {
-					return;
+					continue;
+				}
+				if (arrHobbys.length >= 10) {
+					arrHobbys.shift();
 				}
 				arrHobbys.push(str);
 			}
