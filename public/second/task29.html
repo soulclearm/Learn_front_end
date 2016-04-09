@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>task29</title>
+		<meta charset="UTF-8">
+		<style type="text/css">
+		* {
+			font-family: '微软雅黑';
+			padding: 5px;
+			margin: 5px;
+			font-size: 30px;
+		}
+		
+		#textInput {
+			width: 20em;
+			height: 2em;
+			border: 2px solid gray;
+			border-radius: 10px;
+			outline: none;
+		}
+		
+		#check {
+			background-color: rgb(47, 121, 186);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			width: 160%;
+			height: 120%;
+		}
+		
+		#tips {
+			color: gray;
+		}
+		</style>
+	</head>
+
+	<body>
+		<form>
+			<table>
+				<tr>
+					<td><strong>名称</strong></td>
+					<td>
+						<input type="text" id="textInput"></input>
+					</td>
+					<td>
+						<input type="button" id="check" value="验证">
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td id="tips">必填，长度为4到16个字符</td>
+					<td></td>
+				</tr>
+			</table>
+		</form>
+		<script type="text/javascript">
+		document.querySelector('#check').addEventListener('click', function() {
+			var input = document.querySelector('#textInput');
+			var len = input.value.trim().replace(new RegExp('[\u4e00-\u9fa5]', 'g'), 'aa').length;
+			var tips = document.querySelector('#tips');
+			if (len >= 4 && len <= 16) {
+				console.log(123);
+				tips.innerHTML = '名称格式正确';
+				tips.style.color = 'green';
+				input.style.border = '2px solid green';
+			} else {
+				console.log(456);
+				tips.innerHTML = '名称格式错误';
+				tips.style.color = 'red';
+				input.style.border = '2px solid red';
+			}
+		})
+		var a = 5;
+		console.log(a += 6)
+		</script>
+	</body>
+
+</html>
