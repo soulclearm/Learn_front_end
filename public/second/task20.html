@@ -60,11 +60,9 @@
 
     function render(str) {
         $('#result').innerHTML = arrData.map(function(d) {
-            var r = d;
             if (str != null && str.length > 0) {
-                r = r.replace(new RegExp(str, "g"), "<span class='select'>" + str + "</span>");
+                d = d.replace(new RegExp(str, "g"), "<span class='select'>" + str + "</span>");
             }
-            return "<div>" + r + "</div>";
             return '<div>' + d + '</div>';
         }).join('');
     }
