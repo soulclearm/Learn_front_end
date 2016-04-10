@@ -39,6 +39,14 @@
 			color: gray;
 			visibility: hidden;
 		}
+		
+		input[type='button'] {
+			background-color: rgb(47, 121, 186);
+			border: none;
+			border-radius: 10px;
+			color: white;
+			outline: none;
+		}
 		</style>
 	</head>
 
@@ -73,6 +81,9 @@
 				<input type="text" id="ip5"></input>
 				<br />
 				<span>请输入11位手机号码</span>
+			</section>
+			<section>
+				<input type="button" value="验证" id="check"></input>
 			</section>
 		</form>
 		<script type="text/javascript">
@@ -172,6 +183,31 @@
 				span.style.color = 'gray';
 			})
 		}
+
+		$('#check').addEventListener('click', function(e) {
+			var right = true;
+			for (var i = 0; i < inputEles.length; i++) {
+				var input = inputEles[i];
+				checkValue(input);
+				var span = input.parentElement.getElementsByTagName('span')[0];
+				span.style.visibility = 'visible';
+				span.innerHTML = checkResult.tip;
+				if (checkResult.right) {
+					input.style.border = '2px solid green';
+					span.style.color = 'green';
+				} else {
+					input.style.border = '2px solid red';
+					span.style.color = 'red';
+					right = false;
+				}
+			}
+
+			if (right) {
+				alert('提交成功');
+			} else {
+				alert('提交失败，请检查输入');
+			}
+		})
 		</script>
 	</body>
 
