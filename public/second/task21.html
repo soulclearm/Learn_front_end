@@ -32,7 +32,7 @@
     </article>
     <hr />
     <article id="hobbys">
-        <textarea placeholder="请输入兴趣爱好" rows="3" cols="15" id="hobbyInput">足球，篮球 跳舞；唱歌 lol dota 式</textarea>
+        <textarea placeholder="请输入兴趣爱好" rows="3" cols="15" id="hobbyInput">1,2，３，4 5 6　７</textarea>
         <br />
         <button id="sureHobby">确认兴趣爱好</button>
         <div id="hobbyShow"></div>
@@ -42,75 +42,80 @@
         return document.querySelector(el);
     }
 
-    // 处理tag相关的
-    var arrTags = [];
+    function list(input, show) {
+        this.input = input;
+        this.show = show;
+        this.arr = [];
+        this.maxLen = 10;
+    }
 
-    $('#tagInput').addEventListener('keyup', function(event) {
-        var str = event.target.value;
-        if (str.match(/[\r| |\,|\，]$/) || event.keyCode === 13) {
-            if (str.trim().length <= 0) {
-                return;
-            }
-            // 去重
-            if (arrTags.indexOf(str.trim()) >= 0) {
-                alert('已经有相同标签');
-                return;
-            }
-            if (arrTags.length >= 10) {
-                arrTags.shift();
-            }
-            arrTags.push(str.trim());
-            event.target.value = '';
-            renderTags();
+    list.prototype.pushData = function(d) {
+        if (d.length <= 0 || this.arr.indexOf(d) >= 0) {
+            return;
         }
-    })
+        this.arr.push(d);
+        if (this.arr.length > this.maxLen) {
+            this.arr.shift();
+        }
 
-    $('#tagShow').addEventListener('mouseover', function(e) {
-        if (e.target && e.target.tagName === 'B') {
+        this.render();
+    };
+
+    list.prototype.deleteData = function(ele) {
+        var idx = [].indexOf.call(this.show.children, ele);
+        this.arr.splice(idx, 1);
+        this.render();
+    };
+
+    list.prototype.render = function() {
+        this.show.innerHTML = this.arr.map(function(d) {
+            return '<b>' + d + '</b>';
+        }).join('');
+    };
+
+    function createList(input, show) {
+        return new list(input, show);
+    }
+
+    var tagInput = $('#tagInput');
+    var tagShow = $('#tagShow');
+    var hobbyInput = $('#hobbyInput');
+    var hobbyShow = $('#hobbyShow');
+    var sureHobby = $('#sureHobby');
+
+    var tagList = createList(tagInput, tagShow),
+        hobbyList = createList(hobbyInput, hobbyShow);
+
+    tagInput.addEventListener('keyup', function(e) {
+        var str = this.value;
+        if (str.match(/[ ,.;　，．；]$/) || e.keyCode === 13) {
+            tagList.pushData(str.trim());
+            tagInput.value = '';
+        }
+    });
+
+    tagShow.addEventListener('mouseover', function(e) {
+        if (e.target.tagName === 'B') {
             var originHTML = e.target.innerHTML;
             e.target.innerHTML = '删除' + originHTML;
             e.target.addEventListener('mouseout', function() {
                 e.target.innerHTML = originHTML;
             })
             e.target.addEventListener('click', function() {
-                var idx = [].indexOf.call(e.target.parentElement.children, e.target);
-                arrTags.splice(idx, 1);
-                renderTags();
+                tagList.deleteData(e.target);
             })
         }
-    })
+    });
 
-    function renderTags() {
-        $('#tagShow').innerHTML = arrTags.map(function(e) {
-            return '<b>' + e + '</b>';
-        }).join('');
-    }
-
-    // 处理兴趣相关的
-    var arrHobbys = [];
-    $('#sureHobby').addEventListener('click', function() {
-        var strHobbys = $('#hobbyInput').value.trim();
-        $('#hobbyInput').value = '';
-        var arr = strHobbys.split(/[　，．； ,.;、\s\n]+/);
+    sureHobby.addEventListener('click', function() {
+        var strHobbys = hobbyInput.value.trim();
+        hobbyInput.value = '';
+        var arr = strHobbys.split(/[ ,.;　，．；、\s\n]+/);
         for (var i = 0; i < arr.length; i++) {
             var str = arr[i].trim();
-            if (str.length <= 0) {
-                continue;
-            }
-            // 去重
-            if (arrHobbys.indexOf(str) >= 0) {
-                continue;
-            }
-            if (arrHobbys.length >= 10) {
-                arrHobbys.shift();
-            }
-            arrHobbys.push(str);
+            hobbyList.pushData(str);
         }
-
-        $('#hobbyShow').innerHTML = arrHobbys.map(function(e) {
-            return '<b>' + e + '</b>';
-        }).join('');
-    })
+    });
     </script>
 </body>
 
