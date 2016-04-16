@@ -15,6 +15,7 @@
         display: flex;
         margin: 36px 24px;
         flex-grow: 1;
+        transition: background-color 1000ms;
     }
     
     #tree {
@@ -81,7 +82,7 @@ function visitTreeNode(node) {
     }, speed);
 }
 
-var speed = 500;
+var speed = 1000;
 
 function getFnTraverse(value) {
     var stack = [];
