@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        task22</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        text-align: center;
+    }
+    
+    div {
+        border: 2px solid gray;
+        display: flex;
+        margin: 36px 24px;
+        flex-grow: 1;
+    }
+    
+    #tree {
+        width: 80%;
+        height: 300px;
+        margin: 20px auto;
+    }
+    </style>
+</head>
+
+<body>
+    <form>
+        <select id="selectMode">
+            <option value="0">前序</option>
+            <option value="1">中序</option>
+            <option value="2">后序</option>
+        </select>
+        <input type="button" value="开始遍历" id="btnStart"></input>
+    </form>
+    <div id="tree">
+        <div>
+            <div>
+                <div></div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div>
+            <div>
+                <div></div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+// 查找元素
+$ = function(ele) {
+    return document.querySelector(ele);
+}
+
+// 兼容的事件方法
+function addEvent(ele, event, hanlder) {
+    if (ele.addEventListener) {
+        ele.addEventListener(event, hanlder, false);
+    } else if (ele.attachEvent) {
+        ele.attachEvent('on' + event, hanlder);
+    } else {
+        ele['on' + event] = hanlder;
+    }
+}
+
+function visitTreeNode(node) {
+    node.style.backgroundColor = 'pink';
+    setTimeout(function() {
+        node.style.backgroundColor = 'white';
+    }, speed);
+}
+
+var speed = 500;
+
+function getFnTraverse(value) {
+    var stack = [];
+    var func;
+    if (value === '0') {
+        func = function fn(root) {
+            if (!root) {
+                return;
+            }
+            stack.push(function() {
+                visitTreeNode(root);
+            })
+            fn(root.firstElementChild);
+            fn(root.lastElementChild);
+        }
+    } else if (value === '1') {
+        func = function fn(root) {
+            if (!root) {
+                return;
+            }
+            fn(root.firstElementChild);
+            stack.push(function() {
+                visitTreeNode(root);
+            })
+            fn(root.lastElementChild);
+        }
+    } else if (value === '2') {
+        func = function fn(root) {
+            if (!root) {
+                return;
+            }
+            fn(root.firstElementChild);
+            fn(root.lastElementChild);
+            stack.push(function() {
+                visitTreeNode(root);
+            })
+        }
+    }
+
+    return function(root) {
+        $('#btnStart').disabled = true;
+        func(root);
+        var it = setInterval(function() {
+            if (stack.length === 0) {
+                clearInterval(it);
+                $('#btnStart').disabled = false;
+                return;
+            }
+            stack.shift()();
+        }, speed);
+    }
+}
+
+addEvent($('#btnStart'), 'click', function(e) {
+    var select = $('#selectMode');
+    var value = select[select.selectedIndex].value;
+    getFnTraverse(value)($('#tree'));
+})
+</script>
+
+</html>
