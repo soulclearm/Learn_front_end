@@ -4,14 +4,182 @@
 <head>
     <title>task23</title>
     <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        text-align: center;
+        margin: 0;
+        padding: 30px;
+        min-width: 600px;
+    }
+    
+    p {
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 100%;
+        border: 2px solid gray;
+    }
+    
+    span {
+        padding: 10px;
+        /*border: 2px solid gray;*/
+    }
+    
+    div {
+        display: flex;
+        position: relative;
+        padding-top: 48px;
+        margin: 0;
+        flex: auto;
+        min-width: 30px;
+    }
+    
+    #treeShow {
+        height: 600px;
+        border: none;
+    }
+    </style>
 </head>
 
 <body>
-    <select id="selectOrder">
-        <option value="0">深度优先遍历</option>
-        <option value="1">广度优先遍历</option>
-    </select>
-    <input type="button" id="btn" value="开始"></input>
+    <form>
+        <select id="selectOrder">
+            <option value="0">深度优先遍历</option>
+            <option value="1">广度优先遍历</option>
+        </select>
+        <input type="button" id="btnStart" value="开始遍历"></input>
+        <input type="button" id="btnSearch" value="查找"></input>
+        <input type="text" id="inputSearch" placeholder="输入查找内容"></input>
+    </form>
+    <div id="treeShow"></div>
+    <script type="text/javascript">
+    var $ = function(ele) {
+        return document.querySelector(ele);
+    };
+
+    var selectOrder = $('#selectOrder'),
+        btnStart = $('#btnStart'),
+        btnSearch = $('#btnSearch'),
+        inputSearch = $('#inputSearch'),
+        treeShow = $('#treeShow');
+
+    var TreeNode = function(data, parent) {
+        this.data = data;
+        this.parent = parent || null;
+        this.children = [];
+        if (this.parent) {
+            parent.children.push(this);
+        }
+    };
+
+    TreeNode.prototype = {
+        getElement: function() {
+            if (!this.ele) {
+                this.ele = document.createElement('div');
+                this.ele.innerHTML = '<p><span>' + this.data + '</span></p>';
+            }
+            return this.ele;
+        },
+        visit: function() {
+            var span = this.getElement().getElementsByTagName('span')[0];
+            span.style.backgroundColor = 'pink';
+            setTimeout(function() {
+                span.style.backgroundColor = 'white';
+            }, 500);
+        },
+    };
+
+    var Tree = function(rootData) {
+        if (!rootData) {
+            return;
+        }
+        this.root = new TreeNode(rootData);
+    };
+
+    Tree.prototype = {
+        add: function(data, parent) {
+            return new TreeNode(data, parent);
+        },
+        DFS: function() {
+            var stack = [this.root];
+            while (stack.length) {
+                var node = stack.shift();
+                node.visit();
+                if (node.children && node.children.length > 0) {
+
+                }
+            }
+        },
+        BFS: function(fn) {
+            var stack = [this.root];
+            var arr = [];
+            while (stack.length) {
+                var node = stack.shift();
+                arr.push(node);
+                for (var i = 0; i < node.children.length; i++) {
+                    stack.push(node.children[i]);
+                }
+            }
+
+            console.log(arr);
+
+            var i = setInterval(function() {
+
+                if (arr.length === 0) {
+                    clearInterval(i);
+                }
+                var node = arr.shift();
+                fn.apply(node);
+            }, 500);
+        },
+        render: function(div) {
+            var stack = [this.root];
+            div.appendChild(this.root.getElement());
+            while (stack.length) {
+                var node = stack.shift();
+                div = node.getElement();
+                for (var i = 0; i < node.children.length; i++) {
+                    stack.push(node.children[i]);
+                    div.appendChild(node.children[i].getElement());
+                }
+            }
+        }
+    };
+
+    function createTree(rootData) {
+        return new Tree(rootData);
+    }
+
+    var tree = createTree('A'),
+        b1 = tree.add('b1', tree.root),
+        b2 = tree.add('b2', tree.root),
+        c1 = tree.add('c1', b1),
+        c2 = tree.add('c2', b2),
+        c3 = tree.add('c3', b2),
+        d1 = tree.add('d1', c1),
+        d2 = tree.add('d2', c2),
+        d3 = tree.add('d3', c2),
+        d4 = tree.add('d4', c3),
+        d5 = tree.add('d5', c3),
+        d6 = tree.add('d6', c3),
+        e1 = tree.add('e1', d2),
+        e2 = tree.add('e2', d5),
+        e3 = tree.add('e3', d5),
+        f1 = tree.add('f1', e3),
+        f2 = tree.add('f2', e3),
+        f3 = tree.add('f3', e3),
+        f4 = tree.add('f4', e3),
+        f5 = tree.add('f5', e3),
+        f6 = tree.add('f6', e3),
+        f7 = tree.add('f7', e3),
+        f8 = tree.add('f8', e3),
+        f9 = tree.add('f9', e3),
+        f10 = tree.add('f10', e3);
+
+    console.log(tree);
+    tree.render(treeShow);
+    tree.BFS(TreeNode.prototype.visit);
+    </script>
 </body>
 
 </html>
