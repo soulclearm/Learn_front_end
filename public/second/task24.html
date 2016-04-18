@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>task23</title>
+    <title>task24</title>
     <meta charset="utf-8">
     <style type="text/css">
     body {
@@ -10,6 +10,7 @@
         margin: 0;
         padding: 30px;
         min-width: 600px;
+        user-select: none;
     }
     
     p {
@@ -19,6 +20,9 @@
         width: 100%;
         height: 30px;
         border: 2px solid gray;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
     }
     
     span {
@@ -35,6 +39,10 @@
         min-width: 30px;
     }
     
+    form div {
+        padding-top: 6px;
+    }
+    
     #treeShow {
         height: 600px;
         border: none;
@@ -44,13 +52,20 @@
 
 <body>
     <form>
-        <select id="selectOrder">
-            <option value="0">深度优先遍历</option>
-            <option value="1">广度优先遍历</option>
-        </select>
-        <input type="button" id="btnStart" value="开始遍历"></input>
-        <input type="button" id="btnSearch" value="查找"></input>
-        <input type="text" id="inputSearch" placeholder="输入查找内容" value=""></input>
+        <div>
+            <select id="selectOrder">
+                <option value="0">深度优先遍历</option>
+                <option value="1">广度优先遍历</option>
+            </select>
+            <input type="button" id="btnStart" value="开始遍历"></input>
+            <input type="button" id="btnSearch" value="查找"></input>
+            <input type="text" id="inputSearch" placeholder="输入查找内容" value=""></input>
+        </div>
+        <div>
+            <input type="button" id="btnDelete" value="删除"></input>
+            <input type="text" id="inputNewData" placeholder="输入插入内容" value=""></input>
+            <input type="button" id="btnInsert" value="插入"></input>
+        </div>
     </form>
     <div id="treeShow"></div>
     <script type="text/javascript">
@@ -63,15 +78,18 @@
         btnStart = $('#btnStart'),
         btnSearch = $('#btnSearch'),
         inputSearch = $('#inputSearch'),
-        treeShow = $('#treeShow');
+        treeShow = $('#treeShow'),
+        btnDelete = $('#btnDelete'),
+        inputNewData = $('#inputNewData'),
+        btnInsert = $('#btnInsert');
 
     // 开始按钮事件
     btnStart.addEventListener('click', function(e) {
         setCtrlsDisabled(true);
         if (selectOrder[selectOrder.selectedIndex].value === '0') {
-            tree.DFS(TreeNode.prototype.visit);
+            tree.DFS(TreeNode.prototype.visit, 500);
         } else if (selectOrder[selectOrder.selectedIndex].value === '1') {
-            tree.BFS(TreeNode.prototype.visit);
+            tree.BFS(TreeNode.prototype.visit, 500);
         }
     })
 
@@ -83,10 +101,23 @@
         }
         setCtrlsDisabled(true);
         if (selectOrder[selectOrder.selectedIndex].value === '0') {
-            tree.DFS(TreeNode.prototype.isEqual);
+            tree.DFS(TreeNode.prototype.isEqual, 500);
         } else if (selectOrder[selectOrder.selectedIndex].value === '1') {
-            tree.BFS(TreeNode.prototype.isEqual);
+            tree.BFS(TreeNode.prototype.isEqual, 500);
         }
+    })
+
+    btnDelete.addEventListener('click', function() {
+        tree.deleteSelected();
+    })
+
+    btnInsert.addEventListener('click', function() {
+        var value = inputNewData.value.trim();
+        if (value.length <= 0) {
+            alert('请输入要插入的内容');
+            return;
+        }
+        tree.insertData(value);
     })
 
     // 设置控件禁用
@@ -102,19 +133,40 @@
         this.data = data;
         this.parent = parent || null;
         this.children = [];
+        this.selected = false;
         if (this.parent) {
             parent.children.push(this);
         }
     };
 
+    var selectedNode;
+
     TreeNode.prototype = {
         // 获取只生成一次的的元素
         getElement: function() {
             if (!this.ele) {
+                var self = this;
                 this.ele = document.createElement('div');
                 this.ele.innerHTML = '<p><span>' + this.data + '</span></p>';
+                var self = this;
+                this.ele.getElementsByTagName('p')[0].addEventListener('click', function(e) {
+                    self.eleClick();
+                })
             }
             return this.ele;
+        },
+
+        eleClick: function() {
+            this.selected = !this.selected;
+            if (this.selected) {
+                if (selectedNode) {
+                    selectedNode.eleClick();
+                }
+                selectedNode = this;
+                this.getElement().getElementsByTagName('p')[0].style.backgroundColor = 'yellow';
+            } else {
+                this.getElement().getElementsByTagName('p')[0].style.backgroundColor = 'white';
+            }
         },
 
         // 恢复元素初始的状态
@@ -147,6 +199,29 @@
                 span.style.backgroundColor = originBGColor;
             }, 500);
             return false;
+        },
+
+        deleteIfSelected: function() {
+            if (this.selected) {
+                if (this.parent) {
+                    var index = this.parent.children.indexOf(this);
+                    this.parent.children.splice(index, 1);
+                    this.parent.getElement().removeChild(this.getElement());
+                } else {
+                    for (var i = 0; i < this.children.length; i++) {
+                        this.getElement().removeChild(this.children[i].getElement());
+                    }
+                    this.children = [];
+                    alert('根结点要保留');
+                    this.eleClick();
+                }
+            }
+        },
+
+        addChildIfSelected: function() {
+            if (this.selected) {
+                var newNode = new TreeNode(inputNewData.value.trim(), this);
+            }
         }
     };
 
@@ -161,7 +236,20 @@
     Tree.prototype = {
         // 添加结点
         add: function(data, parent) {
-            return new TreeNode(data, parent);
+            var node = new TreeNode(data, parent);
+            this.render(treeShow);
+            return node;
+        },
+
+        deleteSelected: function() {
+            this.BFS(TreeNode.prototype.deleteIfSelected);
+            this.render(treeShow);
+        },
+
+        insertData: function(data) {
+            this.BFS(TreeNode.prototype.addChildIfSelected);
+            this.render(treeShow);
+            console.log(this);
         },
 
         resume: function() {
@@ -172,7 +260,7 @@
         },
 
         // 深度优先遍历
-        DFS: function(fn) {
+        DFS: function(fn, speed) {
             this.resume();
             var arr = [];
 
@@ -187,6 +275,12 @@
 
             var self = this;
             var searchData = inputSearch.value.trim();
+            if (!speed) {
+                for (var i = 0; i < arr.length; i++) {
+                    fn.call(arr[i], searchData);
+                }
+                return;
+            }
             var i = setInterval(function() {
                 if (arr.length === 0) {
                     clearInterval(i);
@@ -199,11 +293,11 @@
                     clearInterval(i);
                     setCtrlsDisabled(false);
                 }
-            }, 500);
+            }, speed);
         },
 
         // 广度优先遍历
-        BFS: function(fn) {
+        BFS: function(fn, speed) {
             this.resume();
 
             var stack = [this.root];
@@ -218,8 +312,13 @@
 
             var self = this;
             var searchData = inputSearch.value.trim();
+            if (!speed) {
+                for (var i = 0; i < arr.length; i++) {
+                    fn.call(arr[i], searchData);
+                }
+                return;
+            }
             var i = setInterval(function() {
-
                 if (arr.length === 0) {
                     clearInterval(i);
                     setCtrlsDisabled(false);
@@ -231,11 +330,12 @@
                     clearInterval(i);
                     setCtrlsDisabled(false);
                 }
-            }, 500);
+            }, speed);
         },
 
         // 渲染
         render: function(div) {
+            div.innerHTML = '';
             var stack = [this.root];
             div.appendChild(this.root.getElement());
             while (stack.length) {
@@ -278,8 +378,6 @@
         f8 = tree.add('f8', e3),
         f9 = tree.add('f9', e3),
         f10 = tree.add('f10', e3);
-
-    tree.render(treeShow);
     </script>
 </body>
 
