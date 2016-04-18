@@ -58,12 +58,14 @@
         return document.querySelector(ele);
     };
 
+    // 获取元素
     var selectOrder = $('#selectOrder'),
         btnStart = $('#btnStart'),
         btnSearch = $('#btnSearch'),
         inputSearch = $('#inputSearch'),
         treeShow = $('#treeShow');
 
+    // 开始按钮事件
     btnStart.addEventListener('click', function(e) {
         setCtrlsDisabled(true);
         if (selectOrder[selectOrder.selectedIndex].value === '0') {
@@ -73,7 +75,12 @@
         }
     })
 
+    // 搜索按钮事件
     btnSearch.addEventListener('click', function(e) {
+        if (inputSearch.value.trim().length <= 0) {
+            alert('请输入查找内容');
+            return;
+        }
         setCtrlsDisabled(true);
         if (selectOrder[selectOrder.selectedIndex].value === '0') {
             tree.DFS(TreeNode.prototype.isEqual);
@@ -82,6 +89,7 @@
         }
     })
 
+    // 设置控件禁用
     function setCtrlsDisabled(flag) {
         selectOrder.disabled = flag;
         btnSearch.disabled = flag;
@@ -89,6 +97,7 @@
         inputSearch.disabled = flag;
     }
 
+    // 树结点定义
     var TreeNode = function(data, parent) {
         this.data = data;
         this.parent = parent || null;
@@ -99,6 +108,7 @@
     };
 
     TreeNode.prototype = {
+        // 获取只生成一次的的元素
         getElement: function() {
             if (!this.ele) {
                 this.ele = document.createElement('div');
@@ -106,17 +116,29 @@
             }
             return this.ele;
         },
+
+        // 恢复元素初始的状态
+        resumeColor: function() {
+            var span = this.getElement().getElementsByTagName('span')[0];
+            span.style.backgroundColor = this.originBGColor;
+        },
+
+        // 遍历元素
         visit: function() {
             var span = this.getElement().getElementsByTagName('span')[0];
             var originBGColor = span.style.backgroundColor;
+            this.originBGColor = originBGColor;
             span.style.backgroundColor = 'pink';
             setTimeout(function() {
                 span.style.backgroundColor = originBGColor;
             }, 500);
         },
+
+        // 查找比较元素
         isEqual: function(data) {
             var span = this.getElement().getElementsByTagName('span')[0];
             var originBGColor = span.style.backgroundColor;
+            this.originBGColor = originBGColor;
             span.style.backgroundColor = 'pink';
             if (this.data === data) {
                 return true;
@@ -128,6 +150,7 @@
         }
     };
 
+    // 树定义
     var Tree = function(rootData) {
         if (!rootData) {
             return;
@@ -136,10 +159,21 @@
     };
 
     Tree.prototype = {
+        // 添加结点
         add: function(data, parent) {
             return new TreeNode(data, parent);
         },
+
+        resume: function() {
+            if (this.specialNode) {
+                this.specialNode.resumeColor();
+                this.specialNode = null;
+            }
+        },
+
+        // 深度优先遍历
         DFS: function(fn) {
+            this.resume();
             var arr = [];
 
             function re(node) {
@@ -151,6 +185,7 @@
 
             re(this.root);
 
+            var self = this;
             var searchData = inputSearch.value.trim();
             var i = setInterval(function() {
                 if (arr.length === 0) {
@@ -160,12 +195,17 @@
                 }
                 var node = arr.shift();
                 if (fn.call(node, searchData)) {
+                    self.specialNode = node;
                     clearInterval(i);
                     setCtrlsDisabled(false);
                 }
             }, 500);
         },
+
+        // 广度优先遍历
         BFS: function(fn) {
+            this.resume();
+
             var stack = [this.root];
             var arr = [];
             while (stack.length) {
@@ -176,6 +216,7 @@
                 }
             }
 
+            var self = this;
             var searchData = inputSearch.value.trim();
             var i = setInterval(function() {
 
@@ -186,11 +227,14 @@
                 }
                 var node = arr.shift();
                 if (fn.call(node, searchData)) {
+                    self.specialNode = node;
                     clearInterval(i);
                     setCtrlsDisabled(false);
                 }
             }, 500);
         },
+
+        // 渲染
         render: function(div) {
             var stack = [this.root];
             div.appendChild(this.root.getElement());
