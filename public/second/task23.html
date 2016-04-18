@@ -17,6 +17,7 @@
         text-align: center;
         top: 0;
         width: 100%;
+        height: 30px;
         border: 2px solid gray;
     }
     
@@ -28,7 +29,7 @@
     div {
         display: flex;
         position: relative;
-        padding-top: 48px;
+        padding-top: 36px;
         margin: 0;
         flex: auto;
         min-width: 30px;
@@ -49,7 +50,7 @@
         </select>
         <input type="button" id="btnStart" value="开始遍历"></input>
         <input type="button" id="btnSearch" value="查找"></input>
-        <input type="text" id="inputSearch" placeholder="输入查找内容"></input>
+        <input type="text" id="inputSearch" placeholder="输入查找内容" value=""></input>
     </form>
     <div id="treeShow"></div>
     <script type="text/javascript">
@@ -62,6 +63,31 @@
         btnSearch = $('#btnSearch'),
         inputSearch = $('#inputSearch'),
         treeShow = $('#treeShow');
+
+    btnStart.addEventListener('click', function(e) {
+        setCtrlsDisabled(true);
+        if (selectOrder[selectOrder.selectedIndex].value === '0') {
+            tree.DFS(TreeNode.prototype.visit);
+        } else if (selectOrder[selectOrder.selectedIndex].value === '1') {
+            tree.BFS(TreeNode.prototype.visit);
+        }
+    })
+
+    btnSearch.addEventListener('click', function(e) {
+        setCtrlsDisabled(true);
+        if (selectOrder[selectOrder.selectedIndex].value === '0') {
+            tree.DFS(TreeNode.prototype.isEqual);
+        } else if (selectOrder[selectOrder.selectedIndex].value === '1') {
+            tree.BFS(TreeNode.prototype.isEqual);
+        }
+    })
+
+    function setCtrlsDisabled(flag) {
+        selectOrder.disabled = flag;
+        btnSearch.disabled = flag;
+        btnStart.disabled = flag;
+        inputSearch.disabled = flag;
+    }
 
     var TreeNode = function(data, parent) {
         this.data = data;
@@ -82,11 +108,24 @@
         },
         visit: function() {
             var span = this.getElement().getElementsByTagName('span')[0];
+            var originBGColor = span.style.backgroundColor;
             span.style.backgroundColor = 'pink';
             setTimeout(function() {
-                span.style.backgroundColor = 'white';
+                span.style.backgroundColor = originBGColor;
             }, 500);
         },
+        isEqual: function(data) {
+            var span = this.getElement().getElementsByTagName('span')[0];
+            var originBGColor = span.style.backgroundColor;
+            span.style.backgroundColor = 'pink';
+            if (this.data === data) {
+                return true;
+            }
+            setTimeout(function() {
+                span.style.backgroundColor = originBGColor;
+            }, 500);
+            return false;
+        }
     };
 
     var Tree = function(rootData) {
@@ -100,15 +139,31 @@
         add: function(data, parent) {
             return new TreeNode(data, parent);
         },
-        DFS: function() {
-            var stack = [this.root];
-            while (stack.length) {
-                var node = stack.shift();
-                node.visit();
-                if (node.children && node.children.length > 0) {
+        DFS: function(fn) {
+            var arr = [];
 
+            function re(node) {
+                arr.push(node);
+                for (var i = 0; i < node.children.length; i++) {
+                    re(node.children[i]);
                 }
             }
+
+            re(this.root);
+
+            var searchData = inputSearch.value.trim();
+            var i = setInterval(function() {
+                if (arr.length === 0) {
+                    clearInterval(i);
+                    setCtrlsDisabled(false);
+                    return;
+                }
+                var node = arr.shift();
+                if (fn.call(node, searchData)) {
+                    clearInterval(i);
+                    setCtrlsDisabled(false);
+                }
+            }, 500);
         },
         BFS: function(fn) {
             var stack = [this.root];
@@ -121,15 +176,19 @@
                 }
             }
 
-            console.log(arr);
-
+            var searchData = inputSearch.value.trim();
             var i = setInterval(function() {
 
                 if (arr.length === 0) {
                     clearInterval(i);
+                    setCtrlsDisabled(false);
+                    return;
                 }
                 var node = arr.shift();
-                fn.apply(node);
+                if (fn.call(node, searchData)) {
+                    clearInterval(i);
+                    setCtrlsDisabled(false);
+                }
             }, 500);
         },
         render: function(div) {
@@ -176,9 +235,7 @@
         f9 = tree.add('f9', e3),
         f10 = tree.add('f10', e3);
 
-    console.log(tree);
     tree.render(treeShow);
-    tree.BFS(TreeNode.prototype.visit);
     </script>
 </body>
 
