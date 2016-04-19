@@ -5,47 +5,77 @@
     <title>task25</title>
     <meta charset="utf-8">
     <style type="text/css">
-    body {
+    form {
         text-align: center;
-        margin: 0;
-        padding: 30px;
-        min-width: 600px;
-        user-select: none;
     }
     
-    p {
-        position: absolute;
-        text-align: center;
-        top: 0;
-        width: 100%;
-        height: 30px;
-        border: 2px solid gray;
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-    }
-    
-    span {
-        padding: 10px;
-        /*border: 2px solid gray;*/
-    }
-    
-    div {
-        display: flex;
-        position: relative;
-        padding-top: 36px;
-        margin: 0;
-        flex: auto;
-        min-width: 30px;
-    }
-    
-    form div {
-        padding-top: 6px;
+    form * {
+        margin: 5px;
     }
     
     #treeShow {
-        height: 600px;
-        border: none;
+        width: 480px;
+        margin: 10px auto;
+    }
+    
+    #treeShow div {
+        padding-left: 20px;
+        /*border: 1px solid rgb(102, 217, 239);*/
+        margin: 3px;
+    }
+    
+    #treeShow p {
+        font-family: '微软雅黑';
+        font-size: 20px;
+        margin: 3px 0px 3px -17px;
+        height: 36px;
+        line-height: 36px;
+        transition: 800ms background-color;
+        border: 1px solid rgb(102, 217, 239);
+    }
+    
+    #treeShow p:hover {
+        background-color: rgb(238, 238, 238);
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    a:hover {}
+    
+    #treeShow img {}
+    
+    .showInline {
+        display: inline;
+    }
+    
+    .hide {
+        display: none;
+    }
+    
+    .arrowRight {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 10px solid black;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        margin: 5px;
+    }
+    
+    .arrowDown {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-top: 10px solid black;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        margin: 5px;
+    }
+    
+    .arrowNone {
+        border-bottom: 10px solid transparent;
     }
     </style>
 </head>
@@ -137,6 +167,8 @@
         this.parent = parent || null;
         this.children = [];
         this.selected = false;
+        this.visible = true;
+        this.opened = true;
         if (this.parent) {
             parent.children.push(this);
         }
@@ -150,13 +182,81 @@
             if (!this.ele) {
                 var self = this;
                 this.ele = document.createElement('div');
-                this.ele.innerHTML = '<p><span>' + this.data + '</span></p>';
+                var p = document.createElement('p');
+                this.ele.appendChild(p);
+                var arrow = document.createElement('b'),
+                    data = document.createElement('a'),
+                    addIcon = document.createElement('img'),
+                    deleteIcon = document.createElement('img');
+
+                arrow.className = 'arrowDown';
+                data.innerHTML = this.data;
+                data.href = 'javascript:;'
+                addIcon.src = 'images/add.png';
+                addIcon.className = 'hide';
+                deleteIcon.src = 'images/delete.png';
+                deleteIcon.className = 'hide';
+
+                p.appendChild(arrow);
+                p.appendChild(data);
+                p.appendChild(addIcon);
+                p.appendChild(deleteIcon);
+
                 var self = this;
-                this.ele.getElementsByTagName('p')[0].addEventListener('click', function(e) {
-                    self.eleClick();
+                p.addEventListener('click', function(e) {
+                    // self.eleClick();
+                });
+                p.addEventListener('mouseover', function(e) {
+                    addIcon.className = 'show';
+                    deleteIcon.className = 'show';
+                });
+                p.addEventListener('mouseout', function(e) {
+                    addIcon.className = 'hide';
+                    deleteIcon.className = 'hide';
+                });
+                addIcon.addEventListener('click', function(e) {
+                    var value = inputNewData.value.trim();
+                    if (value.length <= 0) {
+                        alert('请输入要插入的内容');
+                        return;
+                    }
+                    arrow.className = 'arrowDown';
+
+                    self.checkOpened(true);
+
+                    self.selected = true;
+                    tree.insertData(value);
+                    self.selected = false;
+                });
+                deleteIcon.addEventListener('click', function(e) {
+                    self.selected = true;
+                    tree.deleteSelected();
+                });
+                arrow.addEventListener('click', function(e) {
+                    self.checkOpened(!self.opened);
+                    arrow.className = self.opened ? 'arrowDown' : 'arrowRight';
                 })
             }
+
+            var arrow = this.ele.getElementsByTagName('b')[0];
+            if (this.children.length === 0) {
+                arrow.className = 'arrowNone';
+            }
+
             return this.ele;
+        },
+
+        checkOpened: function(flag) {
+            if (this.opened === flag) {
+                return;
+            }
+            this.opened = flag;
+            var eles = this.getElement().children;
+            for (var i = 0; i < eles.length; i++) {
+                if (eles[i].tagName === 'DIV') {
+                    eles[i].className = this.opened ? '' : 'hide';
+                }
+            }
         },
 
         eleClick: function() {
@@ -174,32 +274,34 @@
 
         // 恢复元素初始的状态
         resumeColor: function() {
-            var span = this.getElement().getElementsByTagName('span')[0];
-            span.style.backgroundColor = this.originBGColor;
+            var p = this.getElement().getElementsByTagName('p')[0];
+            p.style.backgroundColor = this.originBGColor;
         },
 
         // 遍历元素
         visit: function() {
-            var span = this.getElement().getElementsByTagName('span')[0];
-            var originBGColor = span.style.backgroundColor;
+            var p = this.getElement().getElementsByTagName('p')[0];
+            var originBGColor = p.style.backgroundColor;
             this.originBGColor = originBGColor;
-            span.style.backgroundColor = 'pink';
+            p.style.backgroundColor = 'pink';
+            this.checkOpened(true);
             setTimeout(function() {
-                span.style.backgroundColor = originBGColor;
+                p.style.backgroundColor = originBGColor;
             }, 500);
         },
 
         // 查找比较元素
         isEqual: function(data) {
-            var span = this.getElement().getElementsByTagName('span')[0];
-            var originBGColor = span.style.backgroundColor;
+            var p = this.getElement().getElementsByTagName('p')[0];
+            var originBGColor = p.style.backgroundColor;
             this.originBGColor = originBGColor;
-            span.style.backgroundColor = 'pink';
+            p.style.backgroundColor = 'pink';
+            this.checkOpened(true);
             if (this.data === data) {
                 return true;
             }
             setTimeout(function() {
-                span.style.backgroundColor = originBGColor;
+                p.style.backgroundColor = originBGColor;
             }, 500);
             return false;
         },
@@ -234,13 +336,14 @@
             return;
         }
         this.root = new TreeNode(rootData);
+        this.specialNodes = [];
     };
 
     Tree.prototype = {
         // 添加结点
         add: function(data, parent) {
             var node = new TreeNode(data, parent);
-            this.render(treeShow);
+            // this.render(treeShow);
             return node;
         },
 
@@ -252,14 +355,13 @@
         insertData: function(data) {
             this.BFS(TreeNode.prototype.addChildIfSelected);
             this.render(treeShow);
-            console.log(this);
         },
 
         resume: function() {
-            if (this.specialNode) {
-                this.specialNode.resumeColor();
-                this.specialNode = null;
+            for (var i = 0; i < this.specialNodes.length; i++) {
+                this.specialNodes[i].resumeColor();
             }
+            this.specialNodes = [];
         },
 
         // 深度优先遍历
@@ -292,9 +394,9 @@
                 }
                 var node = arr.shift();
                 if (fn.call(node, searchData)) {
-                    self.specialNode = node;
-                    clearInterval(i);
-                    setCtrlsDisabled(false);
+                    self.specialNodes.push(node);
+                    // clearInterval(i);
+                    // setCtrlsDisabled(false);
                 }
             }, speed);
         },
@@ -329,9 +431,9 @@
                 }
                 var node = arr.shift();
                 if (fn.call(node, searchData)) {
-                    self.specialNode = node;
-                    clearInterval(i);
-                    setCtrlsDisabled(false);
+                    self.specialNodes.push(node);
+                    // clearInterval(i);
+                    // setCtrlsDisabled(false);
                 }
             }, speed);
         },
@@ -375,12 +477,9 @@
         f2 = tree.add('f2', e3),
         f3 = tree.add('f3', e3),
         f4 = tree.add('f4', e3),
-        f5 = tree.add('f5', e3),
-        f6 = tree.add('f6', e3),
-        f7 = tree.add('f7', e3),
-        f8 = tree.add('f8', e3),
-        f9 = tree.add('f9', e3),
-        f10 = tree.add('f10', e3);
+        f5 = tree.add('f5', e3);
+
+    tree.render(treeShow);
     </script>
 </body>
 
