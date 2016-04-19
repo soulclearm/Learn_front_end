@@ -10,6 +10,10 @@
         margin: 20px 0 0 0;
     }
     
+    form * {
+        margin: 5px;
+    }
+    
     td {
         width: 30px;
         height: 30px;
@@ -52,29 +56,51 @@
 <body>
     <div id="game"></div>
     <form>
-        <input type="button" value="go" id="btnGo"></input>
-        <input type="button" value="left" id="btnLeft"></input>
-        <input type="button" value="right" id="btnRight"></input>
-        <input type="button" value="back" id="btnBack"></input>
+        <input type="button" value="go" id="btnGo" title="前进"></input>
+        <input type="button" value="left" id="btnLeft" title="头向左转"></input>
+        <input type="button" value="right" id="btnRight" title="头向右转"></input>
+        <input type="button" value="back" id="btnBack" title="头向后转"></input>
+        <br/>
+        <input type="button" value="TRA LEF" id="btnTraLeft" title="左移方向不变"></input>
+        <input type="button" value="TRA RIG" id="btnTraRight" title="右移方向不变"></input>
+        <input type="button" value="TRA TOP" id="btnTraTop" title="上移方向不变"></input>
+        <input type="button" value="TRA BOT" id="btnTraBottom" title="下移方向不变"></input>
+        <br/>
+        <input type="button" value="MOV LEF" id="btnMoveLeft" title="左移方向向左"></input>
+        <input type="button" value="MOV RIG" id="btnMoveRight" title="右移方向向右"></input>
+        <input type="button" value="MOV TOP" id="btnMoveTop" title="上移方向向上"></input>
+        <input type="button" value="MOV BOT" id="btnMoveBottom" title="下移方向向下"></input>
     </form>
     <script type="text/javascript">
-    var divGame = document.getElementById('game'),
-        btnGo = document.getElementById('btnGo'),
-        btnLeft = document.getElementById('btnLeft'),
-        btnRight = document.getElementById('btnRight'),
-        btnBack = document.getElementById('btnBack');
+    $ = function(id) {
+        return document.getElementById(id);
+    }
+    var divGame = document.getElementById('game');
 
-    btnGo.addEventListener('click', function(e) {
-        game.moveDia();
-    })
+    $('btnGo').addEventListener('click', getFnMove());
+    $('btnLeft').addEventListener('click', getFnRotate(-90));
+    $('btnRight').addEventListener('click', getFnRotate(90));
+    $('btnBack').addEventListener('click', getFnRotate(180));
 
-    btnLeft.addEventListener('click', getFnRotate(-90));
-    btnRight.addEventListener('click', getFnRotate(90));
-    btnBack.addEventListener('click', getFnRotate(180));
+    $('btnTraLeft').addEventListener('click', getFnMove(-90));
+    $('btnTraRight').addEventListener('click', getFnMove(90));
+    $('btnTraTop').addEventListener('click', getFnMove(360));
+    $('btnTraBottom').addEventListener('click', getFnMove(180));
+
+    $('btnMoveLeft').addEventListener('click', getFnMove(-90, true));
+    $('btnMoveRight').addEventListener('click', getFnMove(90, true));
+    $('btnMoveTop').addEventListener('click', getFnMove(360, true));
+    $('btnMoveBottom').addEventListener('click', getFnMove(180, true));
 
     function getFnRotate(num) {
         return function() {
             game.rotateDia(num);
+        }
+    }
+
+    function getFnMove(deg, change) {
+        return function() {
+            game.moveDia(deg, change);
         }
     }
 
@@ -140,9 +166,17 @@
             this.dia.ele.style.transform = 'rotate(' + this.dia.deg + 'deg)';
         },
 
-        moveDia: function() {
-            var num = this.dia.deg % 360;
+        moveDia: function(deg, change) {
+            // 移动并改变方向的情况
+            if (deg && change) {
+                this.rotateDia(deg - this.dia.deg);
+            }
+            deg = deg ? deg : this.dia.deg;
+            console.log('朝向 ' + this.dia.deg % 360);
+            var num = deg % 360;
             num = num < 0 ? num + 360 : num;
+            console.log('移动方向 ' + deg);
+
             if (num === 0) {
                 if (this.dia.pos[0] > 1) {
                     this.dia.pos[0]--;
