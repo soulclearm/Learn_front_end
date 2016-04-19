@@ -23,6 +23,7 @@
     table {
         border-collapse: collapse;
         margin: 0 auto;
+        position: relative;
     }
     
     table tr:first-child td,
@@ -38,8 +39,7 @@
         height: 30px;
         background-color: red;
         position: relative;
-        transition: transform 800ms;
-        /*transform: rotate(100deg);*/
+        transition: transform 800ms, top 800ms, left 800ms;
     }
     
     span div {
@@ -56,10 +56,10 @@
 <body>
     <div id="game"></div>
     <form>
-        <input type="button" value="go" id="btnGo" title="前进"></input>
-        <input type="button" value="left" id="btnLeft" title="头向左转"></input>
-        <input type="button" value="right" id="btnRight" title="头向右转"></input>
-        <input type="button" value="back" id="btnBack" title="头向后转"></input>
+        <input type="button" value="GO" id="btnGo" title="前进"></input>
+        <input type="button" value="TUN LEF" id="btnLeft" title="头向左转"></input>
+        <input type="button" value="TUN RIG" id="btnRight" title="头向右转"></input>
+        <input type="button" value="TUN BAC" id="btnBack" title="头向后转"></input>
         <br/>
         <div>
             <input type="button" value="TRA TOP" id="btnTraTop" title="上移方向不变"></input>
@@ -92,12 +92,12 @@
 
     $('btnTraLeft').addEventListener('click', getFnMove(-90));
     $('btnTraRight').addEventListener('click', getFnMove(90));
-    $('btnTraTop').addEventListener('click', getFnMove(360));
+    $('btnTraTop').addEventListener('click', getFnMove(0));
     $('btnTraBottom').addEventListener('click', getFnMove(180));
 
     $('btnMoveLeft').addEventListener('click', getFnMove(-90, true));
     $('btnMoveRight').addEventListener('click', getFnMove(90, true));
-    $('btnMoveTop').addEventListener('click', getFnMove(360, true));
+    $('btnMoveTop').addEventListener('click', getFnMove(0, true));
     $('btnMoveBottom').addEventListener('click', getFnMove(180, true));
 
     function getFnRotate(num) {
@@ -171,33 +171,34 @@
 
         rotateDia: function(degOffset) {
             this.dia.deg += degOffset;
+            this.dia.deg %= 360;
             this.dia.ele.style.transform = 'rotate(' + this.dia.deg + 'deg)';
         },
 
         moveDia: function(deg, change) {
             // 移动并改变方向的情况
-            if (deg && change) {
-                this.rotateDia(deg - this.dia.deg);
+            var speed = 0;
+            if (!isNaN(deg) && change) {
+                var degOffset = deg - this.dia.deg;
+                this.rotateDia(degOffset);
+                speed = 500;
             }
-            deg = deg ? deg : this.dia.deg;
-            console.log('朝向 ' + this.dia.deg % 360);
-            var num = deg % 360;
-            num = num < 0 ? num + 360 : num;
-            console.log('移动方向 ' + deg);
+            deg = !isNaN(deg) ? deg : this.dia.deg;
+            deg %= 360;
 
-            if (num === 0) {
+            if (deg === 0) {
                 if (this.dia.pos[0] > 1) {
                     this.dia.pos[0]--;
                 }
-            } else if (num === 90) {
+            } else if (deg === 90 || deg === -270) {
                 if (this.dia.pos[1] < this.colMax) {
                     this.dia.pos[1]++;
                 }
-            } else if (num === 180) {
+            } else if (deg === 180 || deg === -180) {
                 if (this.dia.pos[0] < this.rowMax) {
                     this.dia.pos[0]++;
                 }
-            } else if (num === 270) {
+            } else if (deg === 270 || deg === -90) {
                 if (this.dia.pos[1] > 1) {
                     this.dia.pos[1]--;
                 }
@@ -205,9 +206,12 @@
 
             var row = this.dia.pos[0],
                 col = this.dia.pos[1],
-                ele = this.dia.ele;
-            ele.parentElement.removeChild(ele);
-            this.table.children[row].children[col].appendChild(ele);
+                ele = this.dia.ele,
+                td = this.table.children[row].children[col];
+            setTimeout(function() {
+                ele.parentElement.removeChild(ele);
+                td.appendChild(ele);
+            }, speed);
         }
     };
 
