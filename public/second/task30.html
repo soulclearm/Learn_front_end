@@ -113,7 +113,7 @@
 
         // 名称
         if (ele === inputEles[0]) {
-            var len = str.replace(new RegExp('[\u4e00-\u9fa5]', 'g'), 'aa').length;
+            var len = str.replace(new RegExp('[^\x00-\xff]', 'g'), 'aa').length;
             if (len >= 4 && len <= 16) {
                 checkResult.right = true;
                 checkResult.tip = '名称可用';

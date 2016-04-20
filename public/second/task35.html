@@ -10,10 +10,6 @@
         margin: 20px 0 0 30px;
     }
     
-    form * {
-        margin: 5px;
-    }
-    
     td {
         width: 30px;
         height: 30px;
@@ -55,6 +51,26 @@
         background-color: black;
         color: green;
         font-size: 24px;
+        left: 30px;
+    }
+    
+    #divCmd {
+        width: 400px;
+        margin: 5px auto;
+        position: relative;
+    }
+    
+    #divCmd * {
+        position: absolute;
+        top: 0;
+    }
+    
+    #divLineNum {
+        width: 30px;
+        height: 168px;
+        background-color: gray;
+        color: yellow;
+        left: 0;
     }
     </style>
 </head>
@@ -65,7 +81,10 @@
         <input type="button" id="btnCall" value="执行"></input>
         <input type="button" id="btnClear" value="清除"></input>
         <br/>
-        <textarea rows="6" cols="30" id="inputCmds"></textarea>
+        <div id="divCmd">
+            <div id="divLineNum"></div>
+            <textarea rows="6" cols="30" id="inputCmds"></textarea>
+        </div>
     </form>
     <script type="text/javascript">
     $ = function(id) {
@@ -73,11 +92,16 @@
     }
     var divGame = $('divGame'),
         inputCmds = $('inputCmds');
+
+    function getLineNum(str, aa) {
+        // body...
+    }
+
     inputCmds.addEventListener('keyup', function(e) {
-        var a = inputCmds.createTextRange().getClientRects();
-        console.log(a);
-        var arr = this.value.split(/\r\r|\n/);
-        console.log(arr.length);
+        // console.log(e);
+        for (var i = 0; i < this.value.length; i++) {
+            console.log(this.value.charCodeAt(i));
+        }
     })
 
     var commands = {

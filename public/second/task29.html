@@ -57,7 +57,7 @@
     <script type="text/javascript">
     document.querySelector('#check').addEventListener('click', function() {
         var input = document.querySelector('#textInput');
-        var len = input.value.trim().replace(new RegExp('[\u4e00-\u9fa5]', 'g'), 'aa').length;
+        var len = input.value.trim().replace(/[^\x00-\xff]/g, 'aa').length;
         var tips = document.querySelector('#tips');
         if (len >= 4 && len <= 16) {
             console.log(123);
