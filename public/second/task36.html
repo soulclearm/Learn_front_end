@@ -350,6 +350,7 @@
             ele: null,
             pos: null
         };
+        this.arrWallPos = [];
     }
 
     Game.prototype = {
@@ -446,11 +447,111 @@
                 ele.parentElement.removeChild(ele);
                 td.appendChild(ele);
             }, speed);
+        },
+
+        checkPos: function(pos) {
+            if (pos[0] < 1 || pos[0] > this.rowMax || pos[1] < 1 || pos[1] > this.colMax) {
+                return false;
+            }
+
+            for (var i = 0; i < this.arrWallPos.length; i++) {
+                var wallPos = this.arrWallPos[i];
+                if (wallPos[0] !== pos[0] || wallPos[1] !== pos[1]) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+
+        getWayTo: function(pos) {
+            if (!this.checkPos(pos)) {
+                alert('目的地无法到达');
+                return;
+            }
+
+            var arrPos = AStar(this.dia.pos, pos, this.checkPos);
+            for (var i = 0; i < arrPos.length; i++) {
+                var row = arrPos[i][0],
+                    col = arrPos[i][1];
+                this.table.children[row].children[col].style.backgroundColor = 'pink';
+            }
+
+            return arrPos;
         }
     };
 
+    function AStar(posFrom, posTo, fnCheckPos) {
+        function getDis(pos1, pos2) {
+            return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1])
+        }
+
+        function getPos(pos) {
+            var row = pos[0],
+                col = pos[1];
+            var arrPos = [];
+            arrPos.push([row - 1, col]);
+            arrPos.push([row + 1, col]);
+            arrPos.push([row, col - 1]);
+            arrPos.push([row, col + 1]);
+
+            return arrPos;
+        }
+
+        function arrContainsPos(arr, pos) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i][0] == pos[0] && arr[i][1] === pos[1]) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        var arrOpen = [posFrom],
+            arrClose = [];
+
+        do {
+            var min = -1;
+            for (var i = 0; i < arrOpen.length; i++) {
+                var dis = getDis(arrOpen[i], posFrom) + getDis(arrOpen[i], posTo);
+                min = (min === -1) ? i : min;
+                var minDis = getDis(arrOpen[min], posFrom) + getDis(arrOpen[min], posTo);
+
+                if (dis <= minDis) {
+                    min = i;
+                }
+            }
+
+            var curPos = arrOpen[min];
+            arrClose.push(curPos);
+            arrOpen.splice(min, 1);
+            if (getDis(curPos, posTo) === 0) {
+                return arrClose;
+            }
+
+            var arrPos = getPos(curPos);
+            for (var i = 0; i < arrPos.length; i++) {
+                if (arrContainsPos(arrClose, arrPos[i]) || !game.checkPos(arrPos[i])) {
+                    continue;
+                }
+                if (arrContainsPos(arrOpen, arrPos[i])) {
+
+                } else {
+                    arrOpen.push(arrPos[i]);
+                }
+            }
+        }
+        while (arrOpen.length > 0)
+    }
+
     var game = new Game(10, 10);
     game.render(divGame);
+
+    var a = game.getWayTo([10, 10]);
+    for (var i = 0; i < a.length; i++) {
+        console.log('位置 ' + a[i][0] + '|' + a[i][1]);
+    }
     </script>
 </body>
 
