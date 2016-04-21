@@ -98,7 +98,7 @@
     
     #formBtns {
         position: absolute;
-        left: 70%;
+        left: 80%;
         top: 50%;
         transform: translate(0, -60%);
     }
@@ -351,6 +351,11 @@
             pos: null
         };
         this.arrWallPos = [];
+        for (var i = 0; i < 30; i++) {
+            var row = Math.ceil(Math.random() * 10),
+                col = Math.ceil(Math.random() * 10);
+            this.arrWallPos.push([row, col]);
+        }
     }
 
     Game.prototype = {
@@ -408,16 +413,7 @@
             this.dia.ele.style.transform = 'rotate(' + this.dia.deg + 'deg)';
         },
 
-        // deg为指定的移动方向，不指定则用原本的朝向
-        // change表示移动的同时是否改变朝向
-        moveDia: function(deg, change) {
-            // 移动并改变方向的情况
-            var speed = 0;
-            if (!isNaN(deg) && change) {
-                var degOffset = deg - this.dia.deg;
-                this.rotateDia(degOffset);
-                speed = 1000;
-            }
+        moveOne: function(deg, speed) {
             deg = !isNaN(deg) ? deg : this.dia.deg;
             deg %= 360;
 
@@ -449,6 +445,20 @@
             }, speed);
         },
 
+        // deg为指定的移动方向，不指定则用原本的朝向
+        // change表示移动的同时是否改变朝向
+        moveDia: function(deg, change) {
+            // 移动并改变方向的情况
+            var speed = 0;
+            if (!isNaN(deg) && change) {
+                var degOffset = deg - this.dia.deg;
+                this.rotateDia(degOffset);
+                speed = 1000;
+            }
+
+            this.moveOne(deg, speed);
+        },
+
         checkPos: function(pos) {
             if (pos[0] < 1 || pos[0] > this.rowMax || pos[1] < 1 || pos[1] > this.colMax) {
                 return false;
@@ -456,7 +466,9 @@
 
             for (var i = 0; i < this.arrWallPos.length; i++) {
                 var wallPos = this.arrWallPos[i];
-                if (wallPos[0] !== pos[0] || wallPos[1] !== pos[1]) {
+                if (wallPos[0] === pos[0] && wallPos[1] === pos[1]) {
+                    // delete
+                    this.table.children[pos[0]].children[pos[1]].style.backgroundColor = 'black';
                     return false;
                 }
             }
@@ -467,17 +479,42 @@
         getWayTo: function(pos) {
             if (!this.checkPos(pos)) {
                 alert('目的地无法到达');
-                return;
+                return [];
             }
 
-            var arrPos = AStar(this.dia.pos, pos, this.checkPos);
+            var self = this;
+            var arrPos = AStar(this.dia.pos, pos, function(pos) {
+                return self.checkPos(pos);
+            });
+
+            // delete
             for (var i = 0; i < arrPos.length; i++) {
                 var row = arrPos[i][0],
                     col = arrPos[i][1];
-                this.table.children[row].children[col].style.backgroundColor = 'pink';
+                this.table.children[row].children[col].style.color = 'blue';
             }
 
-            return arrPos;
+            var posEnd = arrPos.pop();
+            var arr = [posEnd];
+            var G = posEnd[2] - 1;
+            while (arrPos.length > 0) {
+                var pos = arrPos.pop();
+                // todo 要修改
+                if (G === pos[2] && (Math.abs(pos[0] - posEnd[0]) === 1 || Math.abs(pos[1] - posEnd[1]) === 1)) {
+                    arr.push(pos);
+                    G--;
+                    posEnd = pos;
+                }
+            }
+
+            // delete
+            for (var i = 0; i < arr.length; i++) {
+                var row = arr[i][0],
+                    col = arr[i][1];
+                this.table.children[row].children[col].style.color = 'red';
+            }
+
+            return arr;
         }
     };
 
@@ -488,12 +525,13 @@
 
         function getPos(pos) {
             var row = pos[0],
-                col = pos[1];
+                col = pos[1],
+                g = pos[2];
             var arrPos = [];
-            arrPos.push([row - 1, col]);
-            arrPos.push([row + 1, col]);
-            arrPos.push([row, col - 1]);
-            arrPos.push([row, col + 1]);
+            arrPos.push([row - 1, col, g + 1]);
+            arrPos.push([row + 1, col, g + 1]);
+            arrPos.push([row, col - 1, g + 1]);
+            arrPos.push([row, col + 1, g + 1]);
 
             return arrPos;
         }
@@ -501,22 +539,24 @@
         function arrContainsPos(arr, pos) {
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i][0] == pos[0] && arr[i][1] === pos[1]) {
-                    return true;
+                    return i;
                 }
             }
 
-            return false;
+            return -1;
         }
 
-        var arrOpen = [posFrom],
+        var arrOpen = [
+                [posFrom[0], posFrom[1], 0]
+            ],
             arrClose = [];
 
         do {
             var min = -1;
             for (var i = 0; i < arrOpen.length; i++) {
-                var dis = getDis(arrOpen[i], posFrom) + getDis(arrOpen[i], posTo);
+                var dis = arrOpen[i][2] + getDis(arrOpen[i], posTo);
                 min = (min === -1) ? i : min;
-                var minDis = getDis(arrOpen[min], posFrom) + getDis(arrOpen[min], posTo);
+                var minDis = arrOpen[min][2] + getDis(arrOpen[min], posTo);
 
                 if (dis <= minDis) {
                     min = i;
@@ -527,22 +567,46 @@
             arrClose.push(curPos);
             arrOpen.splice(min, 1);
             if (getDis(curPos, posTo) === 0) {
+                // delete
+                for (var i = 0; i < arrClose.length; i++) {
+                    var row = arrClose[i][0],
+                        col = arrClose[i][1];
+                    var num = document.createElement('strong');
+                    num.innerHTML += arrClose[i][2] + '+' +
+                        getDis(arrClose[i], posTo);
+                    game.table.children[row].children[col].appendChild(num);
+                }
+
+                for (var i = 0; i < arrOpen.length; i++) {
+                    var row = arrOpen[i][0],
+                        col = arrOpen[i][1];
+                    var num = document.createElement('strong');
+                    num.innerHTML += arrOpen[i][2] + '+' +
+                        getDis(arrOpen[i], posTo);
+                    game.table.children[row].children[col].appendChild(num);
+                }
                 return arrClose;
             }
 
             var arrPos = getPos(curPos);
             for (var i = 0; i < arrPos.length; i++) {
-                if (arrContainsPos(arrClose, arrPos[i]) || !game.checkPos(arrPos[i])) {
+                if (arrContainsPos(arrClose, arrPos[i]) >= 0 || !fnCheckPos(arrPos[i])) {
                     continue;
                 }
-                if (arrContainsPos(arrOpen, arrPos[i])) {
 
+                var index = arrContainsPos(arrOpen, arrPos[i])
+                if (index >= 0) {
+                    if (arrPos[i][2] < arrOpen[index][2]) {
+                        arrOpen[index][2] = arrPos[i][2];
+                    }
                 } else {
                     arrOpen.push(arrPos[i]);
                 }
             }
         }
-        while (arrOpen.length > 0)
+        while (arrOpen.length > 0);
+
+        return [];
     }
 
     var game = new Game(10, 10);
