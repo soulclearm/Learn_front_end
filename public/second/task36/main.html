@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>task36</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<body>
+    <div id="divGame">
+        <form id="formBtns">
+            <p>命令提示</p>
+            <div>
+                <input type="button" value="GO" id="btnGo" title="前进"></input>
+                <br/>
+                <input type="button" value="TUN LEF" id="btnLeft" title="头向左转"></input>
+                <input type="button" value="TUN RIG" id="btnRight" title="头向右转"></input>
+                <br/>
+                <input type="button" value="TUN BAC" id="btnBack" title="头向后转"></input>
+            </div>
+            <br/>
+            <div>
+                <input type="button" value="TRA TOP" id="btnTraTop" title="上移方向不变"></input>
+                <br/>
+                <input type="button" value="TRA LEF" id="btnTraLeft" title="左移方向不变"></input>
+                <input type="button" value="TRA RIG" id="btnTraRight" title="右移方向不变"></input>
+                <br>
+                <input type="button" value="TRA BOT" id="btnTraBottom" title="下移方向不变"></input>
+            </div>
+            <br/>
+            <div>
+                <input type="button" value="MOV TOP" id="btnMoveTop" title="上移方向向上"></input>
+                <br/>
+                <input type="button" value="MOV LEF" id="btnMoveLeft" title="左移方向向左"></input>
+                <input type="button" value="MOV RIG" id="btnMoveRight" title="右移方向向右"></input>
+                <br/>
+                <input type="button" value="MOV BOT" id="btnMoveBottom" title="下移方向向下"></input>
+            </div>
+            <div>
+                <input type="button" value="BUILD" id="btnBuild" title="修墙"></input>
+                <input type="button" value="BRU" id="btnBru" title="粉刷墙"></input>
+                <input type="button" value="RANDOMWALL" id="btnRandomWall" title="随机生成墙"></input>
+                <p>另有两个带参数的命令：bru strColor; go to row col</p>
+            </div>
+        </form>
+    </div>
+    <form>
+        <input type="button" id="btnCall" value="执行"></input>
+        <input type="button" id="btnClear" value="清除"></input>
+        <br/>
+        <div id="divCmd">
+            <div id="divLineNum">
+                <div id="divLineNumInner"></div>
+            </div>
+            <textarea rows="6" cols="30" id="inputCmds"></textarea>
+        </div>
+    </form>
+    <script type="text/javascript" src="pos.js"></script>
+    <script type="text/javascript" src="AStar.js"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>

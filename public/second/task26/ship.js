@@ -48,7 +48,6 @@ energySystem.prototype = {
     update: function() {
         var ship = this.ship;
         var i = setInterval(function() {
-            console.log(ship.energy);
             ship.energy += ship.increaseSpeed;
             if (ship.energy >= ship.maxEnergy) {
                 ship.energy = ship.maxEnergy;

@@ -1,0 +1,105 @@
+body {
+    min-width: 600px;
+}
+
+form {
+    text-align: center;
+    margin: 20px 0 0 30px;
+}
+
+td {
+    width: 30px;
+    height: 30px;
+    border: 1px solid gray;
+    transition: background-color 1000ms;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    position: relative;
+}
+
+table tr:first-child td,
+table tr td:first-child {
+    border: none;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+#divGame {
+    position: relative;
+}
+
+#divGame span {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    position: absolute;
+    top: 0;
+    transition: transform 1000ms, margin 1000ms;
+}
+
+#divGame span div {
+    display: inline-block;
+    width: 30px;
+    height: 10px;
+    background-color: blue;
+    position: absolute;
+    top: 0;
+}
+
+form textarea {
+    position: absolute;
+    background-color: black;
+    color: green;
+    font-size: 24px;
+    left: 30px;
+}
+
+#divCmd {
+    width: 400px;
+    margin: 5px auto;
+    position: relative;
+}
+
+#divLineNum {
+    width: 30px;
+    height: 168px;
+    background-color: gray;
+    color: yellow;
+    position: absolute;
+    left: 0;
+    overflow: hidden;
+}
+
+#divLineNum span {
+    display: inline-block;
+    width: 30px;
+    border-radius: 20px;
+    background-color: transparent;
+}
+
+#divLineNumInner {
+    width: 100%;
+    height: 100%;
+    line-height: 27px;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+#formBtns {
+    position: absolute;
+    left: 80%;
+    top: 0;
+    /*transform: translate(0, -60%);*/
+}
+
+#formBtns input {
+    transition: background-color 1000ms;
+    border-radius: 5px;
+    margin: 2px;
+}

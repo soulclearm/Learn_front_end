@@ -60,19 +60,15 @@
         var len = input.value.trim().replace(/[^\x00-\xff]/g, 'aa').length;
         var tips = document.querySelector('#tips');
         if (len >= 4 && len <= 16) {
-            console.log(123);
             tips.innerHTML = '名称格式正确';
             tips.style.color = 'green';
             input.style.border = '2px solid green';
         } else {
-            console.log(456);
             tips.innerHTML = '名称格式错误';
             tips.style.color = 'red';
             input.style.border = '2px solid red';
         }
     })
-    var a = 5;
-    console.log(a += 6)
     </script>
 </body>
 
