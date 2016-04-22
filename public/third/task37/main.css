@@ -1,0 +1,45 @@
+* {
+    font-family: '微软雅黑';
+    font-size: 24px;
+}
+
+body {
+    text-align: center;
+    margin: 0px;
+    height: 2000px;
+}
+
+#btnLogin {
+    border-radius: 20px;
+    width: 240px;
+    height: 48px;
+    outline: none;
+    margin-top: 50px;
+}
+
+#divFloat {
+    border: 2px solid gray;
+    padding: 20px;
+    text-align: left;
+    border-radius: 20px;
+    background-color: rgb(240, 240, 240);
+}
+
+#divFloat form {
+    text-align: right;
+}
+
+#divFloat form input {
+    width: 90px;
+    /*border-radius: 10px;*/
+    outline: none;
+    color: white;
+}
+
+#divFloat form input:first-child {
+    background-color: rgb(34, 185, 60);
+}
+
+#divFloat form input:last-child {
+    background-color: rgb(204, 85, 92);
+}
