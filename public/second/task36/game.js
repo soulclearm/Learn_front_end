@@ -178,7 +178,6 @@ Game.prototype = {
             alert('已经在目标地点');
         }
         var arr = this.getWayTo(pos);
-        console.log(arr)
         if (arr.length === 0) {
             alert('无法到达目标地点');
         }

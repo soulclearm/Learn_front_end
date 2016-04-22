@@ -46,8 +46,6 @@ FloatLayer.prototype = {
 
         var self = this;
         this.maskEle.addEventListener('click', function(e) {
-            console.log(e);
-            console.log(e.target);
             if (self.maskEle === this) {
                 self.hide();
             }
