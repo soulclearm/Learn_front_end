@@ -12,6 +12,8 @@ FloatLayer.prototype = {
         this.visible = true;
         this.ele.style.transform = 'translate(-50%, -50%) scale(1,1)';
         this.maskEle.style.visibility = 'visible';
+        this.ele.style.left = '50%';
+        this.ele.style.top = '50%';
     },
 
     hide: function() {
@@ -37,6 +39,7 @@ FloatLayer.prototype = {
         this.ele.style.position = 'absolute';
         this.ele.style.left = '50%';
         this.ele.style.top = '50%';
+        this.ele.style.width = this.ele.clientWidth + 'px';
         this.ele.style.transform = 'translate(-50%, -50%) scale(0,0)';
         this.ele.style.transition = this.animateTime + 'ms transform';
 
@@ -67,17 +70,13 @@ FloatLayer.prototype = {
         node.addEventListener('mousedown', function(event) {
             var disX = event.clientX - self.ele.offsetLeft,
                 disY = event.clientY - self.ele.offsetTop;
-            node.onmousemove = function(event) {
+            document.onmousemove = function(event) {
                 self.ele.style.left = event.clientX - disX + "px";
                 self.ele.style.top = event.clientY - disY + "px";
             };
-            node.onmouseup = function() {
-                node.onmousedown = null;
-                node.onmousemove = null;
-            }
-            node.onmouseout = function() {
-                node.onmousedown = null;
-                node.onmousemove = null;
+            document.onmouseup = function() {
+                document.onmousedown = null;
+                document.onmousemove = null;
             }
         });
     }
