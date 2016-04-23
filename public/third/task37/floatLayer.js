@@ -49,11 +49,37 @@ FloatLayer.prototype = {
             if (self.maskEle === this) {
                 self.hide();
             }
-        }, false)
+        })
 
         this.ele.addEventListener('click', function(e) {
             e.stopPropagation();
         })
+
+        this.setDragNode(this.ele.children[0]);
+    },
+
+    setDragNode: function(node) {
+        var preX, preY;
+        var self = this;
+
+        node.style.cursor = 'move';
+
+        node.addEventListener('mousedown', function(event) {
+            var disX = event.clientX - self.ele.offsetLeft,
+                disY = event.clientY - self.ele.offsetTop;
+            node.onmousemove = function(event) {
+                self.ele.style.left = event.clientX - disX + "px";
+                self.ele.style.top = event.clientY - disY + "px";
+            };
+            node.onmouseup = function() {
+                node.onmousedown = null;
+                node.onmousemove = null;
+            }
+            node.onmouseout = function() {
+                node.onmousedown = null;
+                node.onmousemove = null;
+            }
+        });
     }
 };
 

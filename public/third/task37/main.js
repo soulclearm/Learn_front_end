@@ -7,12 +7,7 @@
     layer.show();
 
     $('#btnLogin').addEventListener('click', function() {
-        console.log(layer.visible)
-        if (layer.visible) {
-            // layer.hide();
-        } else {
-            layer.show();
-        }
+        layer.show();
     })
 
     $('#btnSure').addEventListener('click', function() {
