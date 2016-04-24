@@ -1,265 +1,332 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="UTF-8">
-	<title>task5</title>
-	<style type="text/css">
-		body{
-			background-color: rgb(222,222,222);
-			margin: 0;
-			min-width: 600px;
-		}
-		header{
-			width: 100%;
-			overflow: auto;
-			background-color: rgb(51,51,51);
-		}
-		header img{
-			margin-left: 50px;
-			float: left;
-		}
-		header ul{
-			float: right;
-		}
-		header ul li{
-			float: left;
-			margin: 10px;
-		}
-		.container{
-			margin-right: 320px;
-		}
-		.container article,aside{
-			background-color: rgb(255,255,255);
-			border-bottom: 2px solid rgb(132,132,132);
-			border-right: 2px solid rgb(132,132,132);
-		}
-		.container article{
-			margin: 10px;
-			padding: 10px;
-		}
-		.container article h2{
-			font-size: 24px;
-		}
-		.container article h3{
-			font-size: 21px;
-			color: rgb(100,100,100);
-		}
-		.container article span{
-			font-size: 18px;
-			color: gray;
-		}
-		.list_none{
-			list-style-type: none;
-		}
-		#article3 figure{
-			display: inline-block;
-			padding: 10px;
-			border: 2px solid gray;
-		}
-		#article4 table{
-			width: 99%;
-			margin: 10px auto;
-		}
-		#article4 table,#article4 table th,#article4 table td{
-			border: 1px solid gray;
-			border-collapse: collapse;
-		}
-		#article4 table th{
-			background-color: rgb(51,51,51);
-			color: white;
-			text-align: left;
-		}
-		#article4 table tfoot{
-			background-color: gray;
-			color: black;
-			font-weight: bold;
-		}
-		#article4 table tfoot td{
-			border: 0px solid yellow;
-		}
-		aside{
-			position: absolute;
-			top: 80px;
-			right: 0px;
-			width: 300px;
-			border: 2px solid gray;
-			padding: 10px;
-		}
-		aside h2{
-			border-left: 3px solid gray;
-			padding: 10px;
-		}
-		aside table tr td:first-child{
-			text-align: right;
-			vertical-align: top;
-			margin-right: 20px;
-		}
-		aside input[type="submit"]{
-			border-radius: 10px;
-			width: 100%;
-			height: 3em;
-			margin: 20px auto;
-			background-color: blue;
-			color: white;
-		}
-		footer{
-			height: 70px;
-			line-height: 70px;
-			background-color: black;
-			text-align: center;
-			color: white;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <title>task5</title>
+    <style type="text/css">
+    body {
+        background-color: rgb(222, 222, 222);
+        margin: 0;
+        min-width: 600px;
+    }
+    
+    header {
+        width: 100%;
+        overflow: auto;
+        background-color: rgb(51, 51, 51);
+    }
+    
+    header img {
+        margin-left: 50px;
+        float: left;
+    }
+    
+    header ul {
+        float: right;
+    }
+    
+    header ul li {
+        float: left;
+        margin: 10px;
+    }
+    
+    .container {
+        margin-right: 320px;
+    }
+    
+    .container article,
+    aside {
+        background-color: rgb(255, 255, 255);
+        border-bottom: 2px solid rgb(132, 132, 132);
+        border-right: 2px solid rgb(132, 132, 132);
+    }
+    
+    .container article {
+        margin: 10px;
+        padding: 10px;
+    }
+    
+    .container article h2 {
+        font-size: 24px;
+    }
+    
+    .container article h3 {
+        font-size: 21px;
+        color: rgb(100, 100, 100);
+    }
+    
+    .container article span {
+        font-size: 18px;
+        color: gray;
+    }
+    
+    .list_none {
+        list-style-type: none;
+    }
+    
+    #article3 figure {
+        display: inline-block;
+        padding: 10px;
+        border: 2px solid gray;
+    }
+    
+    #article4 table {
+        width: 99%;
+        margin: 10px auto;
+    }
+    
+    #article4 table,
+    #article4 table th,
+    #article4 table td {
+        border: 1px solid gray;
+        border-collapse: collapse;
+    }
+    
+    #article4 table th {
+        background-color: rgb(51, 51, 51);
+        color: white;
+        text-align: left;
+    }
+    
+    #article4 table tfoot {
+        background-color: gray;
+        color: black;
+        font-weight: bold;
+    }
+    
+    #article4 table tfoot td {
+        border: 0px solid yellow;
+    }
+    
+    aside {
+        position: absolute;
+        top: 80px;
+        right: 0px;
+        width: 300px;
+        border: 2px solid gray;
+        padding: 10px;
+    }
+    
+    aside h2 {
+        border-left: 3px solid gray;
+        padding: 10px;
+    }
+    
+    aside table tr td:first-child {
+        text-align: right;
+        vertical-align: top;
+        margin-right: 20px;
+    }
+    
+    aside input[type="submit"] {
+        border-radius: 10px;
+        width: 100%;
+        height: 3em;
+        margin: 20px auto;
+        background-color: blue;
+        color: white;
+    }
+    
+    footer {
+        height: 70px;
+        line-height: 70px;
+        background-color: black;
+        text-align: center;
+        color: white;
+    }
+    </style>
 </head>
+
 <body>
-	<header>
-		<img src="images/baidu_logo.png">
-		<nav>
-			<ul>
-				<li><a href="#article1">文章一</a></li>
-				<li><a href="#article2">文章二</a></li>
-				<li><a href="#article3">文章三</a></li>
-				<li><a href="#article4">文章四</a></li>
-			</ul>
-		</nav>
-	</header>
-
-	<main>
-		<div class="container">
-			<article id="article1">
-				<h2>文章一</h2>
-				<h3>文章副标题</h3>
-				<p><span>作者 发表时间</span></p>
-				<p>披绣闼，俯雕甍，山原旷其盈视，川泽纡其骇瞩。闾阎扑地，钟鸣鼎食之家；舸舰迷津，青雀黄龙之舳。云销雨霁，彩彻区明。落霞与孤鹜齐飞，秋水共长天一色。渔舟唱晚，响穷彭蠡之滨，雁阵惊寒，声断衡阳之浦。</p>
-				<p>换行</p>
-				<p>昔人已乘黄鹤去，此地空余<a href="https://en.wikipedia.org/wiki/Yellow_Crane_Tower">黄鹤楼</a>。黄鹤一去不复返，白云千载空悠悠。晴川历历汉阳树，芳草萋萋鹦鹉洲。日暮乡关何处是？烟波江上使人愁。</p>
-				<img src="images/1.jpg" alt="黄鹤楼">
-				<p>昔人已乘黄鹤去，此地空余<a href="https://en.wikipedia.org/wiki/Yellow_Crane_Tower" target="_blank">黄鹤楼</a>。黄鹤一去不复返，白云千载空悠悠。晴川历历汉阳树，芳草萋萋鹦鹉洲。日暮乡关何处是？烟波江上使人愁。</p>
-			</article>
-			<article id="article2">
-				<h2>文章二</h2>
-				<h3>文章副标题</h3>
-				<p><span>作者 发表时间</span></p>
-				<p>披绣闼，俯雕甍，山原旷其盈视，川泽纡其骇瞩。闾阎扑地，钟鸣鼎食之家；舸舰迷津，青雀黄龙之舳。云销雨霁，彩彻区明。落霞与孤鹜齐飞，秋水共长天一色。渔舟唱晚，响穷彭蠡之滨，雁阵惊寒，声断衡阳之浦。</p>
-				<p>换行</p>
-				<p>昔人已乘黄鹤去，此地空余<a href="https://en.wikipedia.org/wiki/Yellow_Crane_Tower">黄鹤楼</a>。黄鹤一去不复返，白云千载空悠悠。晴川历历汉阳树，芳草萋萋鹦鹉洲。日暮乡关何处是？烟波江上使人愁。</p>
-				<img src="images/1.jpg" alt="黄鹤楼">
-				<ul class="list_none">
-					<li>列表项目一</li>
-					<li>列表项目二</li>
-					<li>列表项目三</li>
-				</ul>
-			</article>
-			<article id="article3">
-				<h2>图片</h2>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-				<figure>
-					<figcaption>路飞手办</figcaption>
-					<img src="images/2.jpg" alt="路飞">
-				</figure>
-			</article>
-			<article id="article4">
-				<h2>文章四</h2>
-				<h3>文章副标题</h3>
-				<p><span>作者 发表时间</span></p>
-				<ol>
-					<li>列表项目一</li>
-					<li>列表项目二</li>
-					<li>列表项目三</li>
-				</ol>
-				<table>
-					<caption>下面是一个表格，border="1"</caption>
-					<thead>
-						<tr><th>表头</th><th>表头</th><th>表头</th></tr>
-					</thead>
-					<tbody>
-						<tr><td>表内容单元格</td><td>表内容单元格</td><td><a href="javascript:;">操作</a></td></tr>
-						<tr><td>表内容单元格</td><td>表内容单元格</td><td><a href="javascript:;">操作</a></td></tr>
-						<tr><td>表内容单元格</td><td>表内容单元格</td><td><a href="javascript:;">操作</a></td></tr>
-					</tbody>
-					<tfoot>
-						<tr><td>总计</td><td colspan="2">1000</td></tr>
-					</tfoot>
-				</table>
-			</article>
-		</div>
-		<aside id="aside">
-			<h2>这是一个侧栏</h2>
-			<form>
-				<table>
-					<tr>
-						<td>请输入邮箱地址</td>
-						<td><input type="text" placeholder="这是一个文本输入框"></input></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>邮箱地址请按格式填写</td>
-					</tr>
-					<tr>
-						<td>请输入密码</td>
-						<td><input type="password" placeholder="密码"></input></td>
-					</tr>
-					<tr>
-						<td>请重复输入密码</td>
-						<td><input type="password" placeholder="密码"></input></td>
-					</tr>
-					<tr>
-						<td>性别</td>
-						<td><input type="radio" name="gender" value="m">男</input> <input type="radio" name="gender" value="f">女</input></td>
-					</tr>
-					<tr>
-						<td>城市</td>
-						<td><select><option>北京</option><option>上海</option><option>广州</option><option>深圳</option></select></td>
-					</tr>
-					<tr>
-						<td>爱好</td>
-						<td><input type="checkbox">运动</input> <input type="checkbox">艺术</input> <input type="checkbox">科学</input></td>
-					</tr>
-					<tr>
-						<td>个人描述</td>
-						<td><textarea rows="5" cols="20">这是一个多行输入框</textarea></td>
-					</tr>
-				</table>
-				<p>
-					<input type="submit" value="确认提交"></input>
-				</p>
-			</form>
-		</aside>
-	</main>
-
-	<footer>
-		版权所有&copy by menghao
-	</footer>
+    <header>
+        <img src="images/baidu_logo.png">
+        <nav>
+            <ul>
+                <li><a href="#article1">文章一</a></li>
+                <li><a href="#article2">文章二</a></li>
+                <li><a href="#article3">文章三</a></li>
+                <li><a href="#article4">文章四</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            <article id="article1">
+                <h2>文章一</h2>
+                <h3>文章副标题</h3>
+                <p><span>作者 发表时间</span></p>
+                <p>披绣闼，俯雕甍，山原旷其盈视，川泽纡其骇瞩。闾阎扑地，钟鸣鼎食之家；舸舰迷津，青雀黄龙之舳。云销雨霁，彩彻区明。落霞与孤鹜齐飞，秋水共长天一色。渔舟唱晚，响穷彭蠡之滨，雁阵惊寒，声断衡阳之浦。</p>
+                <p>换行</p>
+                <p>昔人已乘黄鹤去，此地空余<a href="https://en.wikipedia.org/wiki/Yellow_Crane_Tower">黄鹤楼</a>。黄鹤一去不复返，白云千载空悠悠。晴川历历汉阳树，芳草萋萋鹦鹉洲。日暮乡关何处是？烟波江上使人愁。</p>
+                <img src="images/1.jpg" alt="黄鹤楼">
+                <p>昔人已乘黄鹤去，此地空余<a href="https://en.wikipedia.org/wiki/Yellow_Crane_Tower" target="_blank">黄鹤楼</a>。黄鹤一去不复返，白云千载空悠悠。晴川历历汉阳树，芳草萋萋鹦鹉洲。日暮乡关何处是？烟波江上使人愁。</p>
+            </article>
+            <article id="article2">
+                <h2>文章二</h2>
+                <h3>文章副标题</h3>
+                <p><span>作者 发表时间</span></p>
+                <p>披绣闼，俯雕甍，山原旷其盈视，川泽纡其骇瞩。闾阎扑地，钟鸣鼎食之家；舸舰迷津，青雀黄龙之舳。云销雨霁，彩彻区明。落霞与孤鹜齐飞，秋水共长天一色。渔舟唱晚，响穷彭蠡之滨，雁阵惊寒，声断衡阳之浦。</p>
+                <p>换行</p>
+                <p>昔人已乘黄鹤去，此地空余<a href="https://en.wikipedia.org/wiki/Yellow_Crane_Tower">黄鹤楼</a>。黄鹤一去不复返，白云千载空悠悠。晴川历历汉阳树，芳草萋萋鹦鹉洲。日暮乡关何处是？烟波江上使人愁。</p>
+                <img src="images/1.jpg" alt="黄鹤楼">
+                <ul class="list_none">
+                    <li>列表项目一</li>
+                    <li>列表项目二</li>
+                    <li>列表项目三</li>
+                </ul>
+            </article>
+            <article id="article3">
+                <h2>图片</h2>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+                <figure>
+                    <figcaption>路飞手办</figcaption>
+                    <img src="images/2.jpg" alt="路飞">
+                </figure>
+            </article>
+            <article id="article4">
+                <h2>文章四</h2>
+                <h3>文章副标题</h3>
+                <p><span>作者 发表时间</span></p>
+                <ol>
+                    <li>列表项目一</li>
+                    <li>列表项目二</li>
+                    <li>列表项目三</li>
+                </ol>
+                <table>
+                    <caption>下面是一个表格，border="1"</caption>
+                    <thead>
+                        <tr>
+                            <th>表头</th>
+                            <th>表头</th>
+                            <th>表头</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>表内容单元格</td>
+                            <td>表内容单元格</td>
+                            <td><a href="javascript:;">操作</a></td>
+                        </tr>
+                        <tr>
+                            <td>表内容单元格</td>
+                            <td>表内容单元格</td>
+                            <td><a href="javascript:;">操作</a></td>
+                        </tr>
+                        <tr>
+                            <td>表内容单元格</td>
+                            <td>表内容单元格</td>
+                            <td><a href="javascript:;">操作</a></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>总计</td>
+                            <td colspan="2">1000</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </article>
+        </div>
+        <aside id="aside">
+            <h2>这是一个侧栏</h2>
+            <form>
+                <table>
+                    <tr>
+                        <td>请输入邮箱地址</td>
+                        <td>
+                            <input type="text" placeholder="这是一个文本输入框"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>邮箱地址请按格式填写</td>
+                    </tr>
+                    <tr>
+                        <td>请输入密码</td>
+                        <td>
+                            <input type="password" placeholder="密码"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>请重复输入密码</td>
+                        <td>
+                            <input type="password" placeholder="密码"></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>性别</td>
+                        <td>
+                            <input type="radio" name="gender" value="m">男</input>
+                            <input type="radio" name="gender" value="f">女</input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>城市</td>
+                        <td>
+                            <select>
+                                <option>北京</option>
+                                <option>上海</option>
+                                <option>广州</option>
+                                <option>深圳</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>爱好</td>
+                        <td>
+                            <input type="checkbox">运动</input>
+                            <input type="checkbox">艺术</input>
+                            <input type="checkbox">科学</input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>个人描述</td>
+                        <td>
+                            <textarea rows="5" cols="20">这是一个多行输入框</textarea>
+                        </td>
+                    </tr>
+                </table>
+                <p>
+                    <input type="submit" value="确认提交"></input>
+                </p>
+            </form>
+        </aside>
+    </main>
+    <footer>
+        版权所有&copy by menghao
+    </footer>
 </body>
+
 </html>

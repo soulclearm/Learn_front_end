@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>task25</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+    form {
+        text-align: center;
+    }
+    
+    form * {
+        margin: 5px;
+    }
+    
+    #treeShow {
+        width: 480px;
+        margin: 10px auto;
+    }
+    
+    #treeShow div {
+        padding-left: 20px;
+        /*border: 1px solid rgb(102, 217, 239);*/
+        margin: 3px;
+    }
+    
+    #treeShow p {
+        font-family: '微软雅黑';
+        font-size: 20px;
+        margin: 3px 0px 3px -17px;
+        height: 36px;
+        line-height: 36px;
+        transition: 800ms background-color;
+        border: 1px solid rgb(102, 217, 239);
+    }
+    
+    #treeShow p:hover {
+        background-color: rgb(238, 238, 238);
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    a:hover {}
+    
+    #treeShow img {}
+    
+    .showInline {
+        display: inline;
+    }
+    
+    .hide {
+        display: none;
+    }
+    
+    .arrowRight {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 10px solid black;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        margin: 5px;
+    }
+    
+    .arrowDown {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-top: 10px solid black;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        margin: 5px;
+    }
+    
+    .arrowNone {
+        border-bottom: 10px solid transparent;
+    }
+    </style>
+</head>
+
+<body>
+    <form>
+        <div>
+            <select id="selectOrder">
+                <option value="0">深度优先遍历</option>
+                <option value="1">广度优先遍历</option>
+            </select>
+            <input type="button" id="btnStart" value="开始遍历"></input>
+            <input type="button" id="btnSearch" value="查找"></input>
+            <input type="text" id="inputSearch" placeholder="输入查找内容" value=""></input>
+        </div>
+        <div>
+            <input type="button" id="btnDelete" value="删除"></input>
+            <input type="text" id="inputNewData" placeholder="输入插入内容" value=""></input>
+            <input type="button" id="btnInsert" value="插入"></input>
+        </div>
+    </form>
+    <div id="treeShow"></div>
+    <script type="text/javascript">
+    var $ = function(ele) {
+        return document.querySelector(ele);
+    };
+
+    // 获取元素
+    var selectOrder = $('#selectOrder'),
+        btnStart = $('#btnStart'),
+        btnSearch = $('#btnSearch'),
+        inputSearch = $('#inputSearch'),
+        treeShow = $('#treeShow'),
+        btnDelete = $('#btnDelete'),
+        inputNewData = $('#inputNewData'),
+        btnInsert = $('#btnInsert');
+
+    // 开始按钮事件
+    btnStart.addEventListener('click', function(e) {
+        setCtrlsDisabled(true);
+        if (selectOrder[selectOrder.selectedIndex].value === '0') {
+            tree.DFS(TreeNode.prototype.visit, 500);
+        } else if (selectOrder[selectOrder.selectedIndex].value === '1') {
+            tree.BFS(TreeNode.prototype.visit, 500);
+        }
+    })
+
+    // 搜索按钮事件
+    btnSearch.addEventListener('click', function(e) {
+        if (inputSearch.value.trim().length <= 0) {
+            alert('请输入查找内容');
+            return;
+        }
+        setCtrlsDisabled(true);
+        if (selectOrder[selectOrder.selectedIndex].value === '0') {
+            tree.DFS(TreeNode.prototype.isEqual, 500);
+        } else if (selectOrder[selectOrder.selectedIndex].value === '1') {
+            tree.BFS(TreeNode.prototype.isEqual, 500);
+        }
+    })
+
+    btnDelete.addEventListener('click', function() {
+        tree.deleteSelected();
+    })
+
+    btnInsert.addEventListener('click', function() {
+        var value = inputNewData.value.trim();
+        if (value.length <= 0) {
+            alert('请输入要插入的内容');
+            return;
+        }
+        tree.insertData(value);
+    })
+
+    // 设置控件禁用
+    function setCtrlsDisabled(flag) {
+        selectOrder.disabled = flag;
+        btnSearch.disabled = flag;
+        btnStart.disabled = flag;
+        inputSearch.disabled = flag;
+        btnDelete.disabled = flag;
+        inputNewData.disabled = flag;
+        btnInsert.disabled = flag;
+    }
+
+    // 树结点定义
+    var TreeNode = function(data, parent) {
+        this.data = data;
+        this.parent = parent || null;
+        this.children = [];
+        this.selected = false;
+        this.visible = true;
+        this.opened = true;
+        if (this.parent) {
+            parent.children.push(this);
+        }
+    };
+
+    var selectedNode;
+
+    TreeNode.prototype = {
+        // 获取只生成一次的的元素
+        getElement: function() {
+            if (!this.ele) {
+                var self = this;
+                this.ele = document.createElement('div');
+                var p = document.createElement('p');
+                this.ele.appendChild(p);
+                var arrow = document.createElement('b'),
+                    data = document.createElement('a'),
+                    addIcon = document.createElement('img'),
+                    deleteIcon = document.createElement('img');
+
+                arrow.className = 'arrowDown';
+                data.innerHTML = this.data;
+                data.href = 'javascript:;'
+                addIcon.src = 'images/add.png';
+                addIcon.className = 'hide';
+                deleteIcon.src = 'images/delete.png';
+                deleteIcon.className = 'hide';
+
+                p.appendChild(arrow);
+                p.appendChild(data);
+                p.appendChild(addIcon);
+                p.appendChild(deleteIcon);
+
+                var self = this;
+                p.addEventListener('click', function(e) {
+                    // self.eleClick();
+                });
+                p.addEventListener('mouseover', function(e) {
+                    addIcon.className = 'show';
+                    deleteIcon.className = 'show';
+                });
+                p.addEventListener('mouseout', function(e) {
+                    addIcon.className = 'hide';
+                    deleteIcon.className = 'hide';
+                });
+                addIcon.addEventListener('click', function(e) {
+                    var value = inputNewData.value.trim();
+                    if (value.length <= 0) {
+                        alert('请输入要插入的内容');
+                        return;
+                    }
+                    arrow.className = 'arrowDown';
+
+                    self.checkOpened(true);
+
+                    self.selected = true;
+                    tree.insertData(value);
+                    self.selected = false;
+                });
+                deleteIcon.addEventListener('click', function(e) {
+                    self.selected = true;
+                    tree.deleteSelected();
+                });
+                arrow.addEventListener('click', function(e) {
+                    self.checkOpened(!self.opened);
+                    arrow.className = self.opened ? 'arrowDown' : 'arrowRight';
+                })
+            }
+
+            var arrow = this.ele.getElementsByTagName('b')[0];
+            if (this.children.length === 0) {
+                arrow.className = 'arrowNone';
+            }
+
+            return this.ele;
+        },
+
+        checkOpened: function(flag) {
+            if (this.opened === flag) {
+                return;
+            }
+            this.opened = flag;
+            var eles = this.getElement().children;
+            for (var i = 0; i < eles.length; i++) {
+                if (eles[i].tagName === 'DIV') {
+                    eles[i].className = this.opened ? '' : 'hide';
+                }
+            }
+        },
+
+        eleClick: function() {
+            this.selected = !this.selected;
+            if (this.selected) {
+                if (selectedNode) {
+                    selectedNode.eleClick();
+                }
+                selectedNode = this;
+                this.getElement().getElementsByTagName('p')[0].style.backgroundColor = 'yellow';
+            } else {
+                this.getElement().getElementsByTagName('p')[0].style.backgroundColor = 'white';
+            }
+        },
+
+        // 恢复元素初始的状态
+        resumeColor: function() {
+            var p = this.getElement().getElementsByTagName('p')[0];
+            p.style.backgroundColor = this.originBGColor;
+        },
+
+        // 遍历元素
+        visit: function() {
+            var p = this.getElement().getElementsByTagName('p')[0];
+            var originBGColor = p.style.backgroundColor;
+            this.originBGColor = originBGColor;
+            p.style.backgroundColor = 'pink';
+            this.checkOpened(true);
+            setTimeout(function() {
+                p.style.backgroundColor = originBGColor;
+            }, 500);
+        },
+
+        // 查找比较元素
+        isEqual: function(data) {
+            var p = this.getElement().getElementsByTagName('p')[0];
+            var originBGColor = p.style.backgroundColor;
+            this.originBGColor = originBGColor;
+            p.style.backgroundColor = 'pink';
+            this.checkOpened(true);
+            if (this.data === data) {
+                return true;
+            }
+            setTimeout(function() {
+                p.style.backgroundColor = originBGColor;
+            }, 500);
+            return false;
+        },
+
+        deleteIfSelected: function() {
+            if (this.selected) {
+                if (this.parent) {
+                    var index = this.parent.children.indexOf(this);
+                    this.parent.children.splice(index, 1);
+                    this.parent.getElement().removeChild(this.getElement());
+                } else {
+                    for (var i = 0; i < this.children.length; i++) {
+                        this.getElement().removeChild(this.children[i].getElement());
+                    }
+                    this.children = [];
+                    alert('根结点要保留');
+                    this.eleClick();
+                }
+            }
+        },
+
+        addChildIfSelected: function() {
+            if (this.selected) {
+                var newNode = new TreeNode(inputNewData.value.trim(), this);
+            }
+        }
+    };
+
+    // 树定义
+    var Tree = function(rootData) {
+        if (!rootData) {
+            return;
+        }
+        this.root = new TreeNode(rootData);
+        this.specialNodes = [];
+    };
+
+    Tree.prototype = {
+        // 添加结点
+        add: function(data, parent) {
+            var node = new TreeNode(data, parent);
+            // this.render(treeShow);
+            return node;
+        },
+
+        deleteSelected: function() {
+            this.BFS(TreeNode.prototype.deleteIfSelected);
+            this.render(treeShow);
+        },
+
+        insertData: function(data) {
+            this.BFS(TreeNode.prototype.addChildIfSelected);
+            this.render(treeShow);
+        },
+
+        resume: function() {
+            for (var i = 0; i < this.specialNodes.length; i++) {
+                this.specialNodes[i].resumeColor();
+            }
+            this.specialNodes = [];
+        },
+
+        // 深度优先遍历
+        DFS: function(fn, speed) {
+            this.resume();
+            var arr = [];
+
+            function re(node) {
+                arr.push(node);
+                for (var i = 0; i < node.children.length; i++) {
+                    re(node.children[i]);
+                }
+            }
+
+            re(this.root);
+
+            var self = this;
+            var searchData = inputSearch.value.trim();
+            if (!speed) {
+                for (var i = 0; i < arr.length; i++) {
+                    fn.call(arr[i], searchData);
+                }
+                return;
+            }
+            var i = setInterval(function() {
+                if (arr.length === 0) {
+                    clearInterval(i);
+                    setCtrlsDisabled(false);
+                    return;
+                }
+                var node = arr.shift();
+                if (fn.call(node, searchData)) {
+                    self.specialNodes.push(node);
+                    // clearInterval(i);
+                    // setCtrlsDisabled(false);
+                }
+            }, speed);
+        },
+
+        // 广度优先遍历
+        BFS: function(fn, speed) {
+            this.resume();
+
+            var stack = [this.root];
+            var arr = [];
+            while (stack.length) {
+                var node = stack.shift();
+                arr.push(node);
+                for (var i = 0; i < node.children.length; i++) {
+                    stack.push(node.children[i]);
+                }
+            }
+
+            var self = this;
+            var searchData = inputSearch.value.trim();
+            if (!speed) {
+                for (var i = 0; i < arr.length; i++) {
+                    fn.call(arr[i], searchData);
+                }
+                return;
+            }
+            var i = setInterval(function() {
+                if (arr.length === 0) {
+                    clearInterval(i);
+                    setCtrlsDisabled(false);
+                    return;
+                }
+                var node = arr.shift();
+                if (fn.call(node, searchData)) {
+                    self.specialNodes.push(node);
+                    // clearInterval(i);
+                    // setCtrlsDisabled(false);
+                }
+            }, speed);
+        },
+
+        // 渲染
+        render: function(div) {
+            div.innerHTML = '';
+            var stack = [this.root];
+            div.appendChild(this.root.getElement());
+            while (stack.length) {
+                var node = stack.shift();
+                div = node.getElement();
+                for (var i = 0; i < node.children.length; i++) {
+                    stack.push(node.children[i]);
+                    div.appendChild(node.children[i].getElement());
+                }
+            }
+        }
+    };
+
+    function createTree(rootData) {
+        return new Tree(rootData);
+    }
+
+    var tree = createTree('A'),
+        b1 = tree.add('b1', tree.root),
+        b2 = tree.add('b2', tree.root),
+        c1 = tree.add('c1', b1),
+        c2 = tree.add('c2', b2),
+        c3 = tree.add('c3', b2),
+        d1 = tree.add('d1', c1),
+        d2 = tree.add('d2', c2),
+        d3 = tree.add('d3', c2),
+        d4 = tree.add('d4', c3),
+        d5 = tree.add('d5', c3),
+        d6 = tree.add('d6', c3),
+        e1 = tree.add('e1', d2),
+        e2 = tree.add('e2', d5),
+        e3 = tree.add('e3', d5),
+        f1 = tree.add('f1', e3),
+        f2 = tree.add('f2', e3),
+        f3 = tree.add('f3', e3),
+        f4 = tree.add('f4', e3),
+        f5 = tree.add('f5', e3);
+
+    tree.render(treeShow);
+    </script>
+</body>
+
+</html>

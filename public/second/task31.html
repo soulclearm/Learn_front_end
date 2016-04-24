@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>task31</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+    * {
+        font-size: 25px;
+        font-family: '微软雅黑';
+    }
+    
+    div {
+        margin: 30px;
+    }
+    
+    form {
+        text-align: center;
+    }
+    
+    #identitySel b {
+        margin: 10px 20px;
+    }
+    
+    select {
+        width: 180px;
+        margin: 0;
+    }
+    
+    #workDiv {
+        display: none;
+    }
+    
+    #workDiv * {
+        margin: 0 30px;
+    }
+    </style>
+</head>
+
+<body>
+    <form>
+        <div id="identitySel">
+            <b><input type="radio" name="isInSchool" value="in" checked="checked" id="inRadio">在校生</input></b>
+            <b><input type="radio" name="isInSchool" value="out" id="outRadio">非在校生</input></b>
+        </div>
+        <div id="schoolDiv">
+            学校
+            <select id="citySelect"></select>
+            <select id="schoolSelect"></select>
+        </div>
+        <div id="workDiv">
+            就业单位
+            <input type="text"></input>
+        </div>
+    </form>
+    <script type="text/javascript">
+    var schools = {
+        '北京': ['清华大学', '北京大学'],
+        '上海': ['上海交通大学', '复旦大学'],
+        '武汉': ['武汉大学', '华中科技大学']
+    }
+
+    var cityOps = '';
+    for (var city in schools) {
+        cityOps += '<option>' + city + '</option>';
+    }
+
+    $ = function(el) {
+        return document.querySelector(el);
+    }
+
+    var inRadio = $('#inRadio'),
+        outRadio = $('#outRadio'),
+        schoolDiv = $('#schoolDiv'),
+        workDiv = $('#workDiv'),
+        citySelect = $('#citySelect'),
+        schoolSelect = $('#schoolSelect')
+
+    citySelect.innerHTML = cityOps;
+
+    function renderSchoolSelect() {
+        var city = citySelect.options[citySelect.selectedIndex].value;
+        schoolSelect.innerHTML = schools[city].map(function(d) {
+            return '<option>' + d + '</option>';
+        })
+    }
+    citySelect.addEventListener('change', renderSchoolSelect);
+
+    inRadio.addEventListener('click', render);
+    outRadio.addEventListener('click', render);
+
+    function render() {
+        if (inRadio.checked) {
+            schoolDiv.style.display = 'block';
+            workDiv.style.display = 'none';
+        }
+        if (outRadio.checked) {
+            schoolDiv.style.display = 'none';
+            workDiv.style.display = 'block';
+        }
+    }
+
+    render();
+    renderSchoolSelect();
+    </script>
+</body>
+
+</html>

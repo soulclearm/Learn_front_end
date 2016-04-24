@@ -1,0 +1,3 @@
+var mediator = function() {
+
+}

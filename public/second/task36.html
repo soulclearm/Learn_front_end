@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>task36</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+    body {
+        min-width: 600px;
+    }
+    
+    form {
+        text-align: center;
+        margin: 20px 0 0 30px;
+    }
+    
+    td {
+        width: 30px;
+        height: 30px;
+        border: 1px solid gray;
+    }
+    
+    table {
+        border-collapse: collapse;
+        margin: 0 auto;
+    }
+    
+    table tr:first-child td,
+    table tr td:first-child {
+        border: none;
+        text-align: right;
+        vertical-align: bottom;
+    }
+    
+    #divGame {
+        position: relative;
+    }
+    
+    #divGame span {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: red;
+        position: relative;
+        transition: transform 1000ms;
+        /*transform: rotate(100deg);*/
+    }
+    
+    #divGame span div {
+        display: inline-block;
+        width: 30px;
+        height: 10px;
+        background-color: blue;
+        position: absolute;
+        top: 0;
+    }
+    
+    form textarea {
+        position: absolute;
+        background-color: black;
+        color: green;
+        font-size: 24px;
+        left: 30px;
+    }
+    
+    #divCmd {
+        width: 400px;
+        margin: 5px auto;
+        position: relative;
+    }
+    
+    #divLineNum {
+        width: 30px;
+        height: 168px;
+        background-color: gray;
+        color: yellow;
+        position: absolute;
+        left: 0;
+        overflow: hidden;
+    }
+    
+    #divLineNum span {
+        display: inline-block;
+        width: 30px;
+        border-radius: 20px;
+        background-color: transparent;
+    }
+    
+    #divLineNumInner {
+        width: 100%;
+        height: 100%;
+        line-height: 27px;
+    }
+    
+    .hide {
+        visibility: hidden;
+    }
+    
+    #formBtns {
+        position: absolute;
+        left: 80%;
+        top: 50%;
+        transform: translate(0, -60%);
+    }
+    
+    #formBtns input {
+        transition: background-color 1000ms;
+        border-radius: 5px;
+        margin: 2px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="divGame">
+        <form id="formBtns">
+            <p>命令提示</p>
+            <div>
+                <input type="button" value="GO" id="btnGo" title="前进"></input>
+                <br/>
+                <input type="button" value="TUN LEF" id="btnLeft" title="头向左转"></input>
+                <input type="button" value="TUN RIG" id="btnRight" title="头向右转"></input>
+                <br/>
+                <input type="button" value="TUN BAC" id="btnBack" title="头向后转"></input>
+            </div>
+            <br/>
+            <div>
+                <input type="button" value="TRA TOP" id="btnTraTop" title="上移方向不变"></input>
+                <br/>
+                <input type="button" value="TRA LEF" id="btnTraLeft" title="左移方向不变"></input>
+                <input type="button" value="TRA RIG" id="btnTraRight" title="右移方向不变"></input>
+                <br>
+                <input type="button" value="TRA BOT" id="btnTraBottom" title="下移方向不变"></input>
+            </div>
+            <br/>
+            <div>
+                <input type="button" value="MOV TOP" id="btnMoveTop" title="上移方向向上"></input>
+                <br/>
+                <input type="button" value="MOV LEF" id="btnMoveLeft" title="左移方向向左"></input>
+                <input type="button" value="MOV RIG" id="btnMoveRight" title="右移方向向右"></input>
+                <br/>
+                <input type="button" value="MOV BOT" id="btnMoveBottom" title="下移方向向下"></input>
+            </div>
+        </form>
+    </div>
+    <form>
+        <input type="button" id="btnCall" value="执行"></input>
+        <input type="button" id="btnClear" value="清除"></input>
+        <br/>
+        <div id="divCmd">
+            <div id="divLineNum">
+                <div id="divLineNumInner"></div>
+            </div>
+            <textarea rows="6" cols="30" id="inputCmds"></textarea>
+        </div>
+    </form>
+    <script type="text/javascript">
+    $ = function(id) {
+        return document.getElementById(id);
+    }
+    var divGame = $('divGame'),
+        divLineNum = $('divLineNum'),
+        divLineNumInner = $('divLineNumInner'),
+        btnCall = $('btnCall'),
+        btnClear = $('btnClear'),
+        inputCmds = $('inputCmds');
+
+    var curLen = 0;
+
+    // textaream内容发生变化时控制行号的显示
+    // 不能正确处理不输入回车自动换行的情况
+    function changeLineNum(str) {
+        var len = str.split(/\r\n|\n/g).length;
+        len = str.length === 0 ? 0 : len;
+        if (curLen === len) {
+            return;
+        }
+        while (curLen > len) {
+            divLineNumInner.removeChild(divLineNumInner.lastElementChild);
+            curLen--;
+        }
+        while (curLen < len) {
+            curLen++;
+            var span = document.createElement('span');
+            span.innerHTML = curLen;
+            divLineNumInner.appendChild(span);
+        }
+    }
+
+    var allOK = true; // 输入内容完全正确的情况
+    var arrCmds = []; // 存储字符命令的数组
+
+    // 将某行标记为错误
+    function markErrLine(lineNum) {
+        divLineNumInner.children[lineNum - 1].style.backgroundColor = 'red';
+    }
+
+    // 清除所有标记
+    function clearErrMark() {
+        for (var i = 0; i < divLineNumInner.children.length; i++) {
+            divLineNumInner.children[i].style.backgroundColor = 'transparent';
+        }
+    }
+
+    // 检查输入命令
+    function checkInput(str) {
+        clearErrMark();
+
+        var arr = str.split(/\r\n|\n/g);
+        allOK = true;
+        for (var i = 0; i < arr.length; i++) {
+            var strCmd = arr[i].trim().toLowerCase();
+            if (strCmd.length === 0) {
+                continue;
+            }
+
+            var temp = strCmd.replace(/\d+/g, '').trim();
+            if (commands.hasOwnProperty(temp)) {
+                var reg = new RegExp('^' + temp + '\\s+\\d*$', 'g');
+                var ok = temp === strCmd || strCmd.match(reg);
+                if (!ok) {
+                    allOK = false;
+                    markErrLine(i + 1);
+                }
+            } else {
+                allOK = false;
+                markErrLine(i + 1);
+            }
+        }
+
+        if (allOK) {
+            arrCmds = arr;
+        }
+    }
+
+    function textareaValueChange(e) {
+        changeLineNum(this.value);
+        checkInput(this.value);
+    }
+
+    inputCmds.addEventListener('propertychange', textareaValueChange);
+    inputCmds.addEventListener('input', textareaValueChange);
+    inputCmds.addEventListener('scroll', function(e) {
+        divLineNumInner.style.marginTop = -this.scrollTop + 'px';
+    })
+
+    // 将字符串命令解析成方法返回
+    function* parseStrCmd(strCmd) {
+        var str1 = strCmd.toLowerCase().replace(/\d+/g, '').trim();
+        var str2 = strCmd.toLowerCase().replace(str1, "").trim();
+        var num = str2.length > 0 ? parseInt(str2) : 1;
+
+        function fn() {
+            commands[str1]();
+            var btn = getBtnByValue(str1);
+            var oColor = btn.style.backgroundColor;
+            btn.style.backgroundColor = 'red';
+            setTimeout(function() {
+                btn.style.backgroundColor = oColor;
+            }, 800)
+        }
+        while (num > 0) {
+            num--;
+            yield fn;
+        }
+    }
+
+    // 执行事件
+    btnCall.addEventListener('click', function(e) {
+        if (!allOK) {
+            alert('请检查命令是否有错误');
+            return;
+        }
+
+        parseStrCmd(arrCmds[0])
+
+        // 先将命令压栈
+        var arrfunc = [];
+        for (var i = 0; i < arrCmds.length; i++) {
+            for (var x of parseStrCmd(arrCmds[i])) {
+                arrfunc.push(x);
+            }
+        }
+
+        // 定时器中将命令出栈并执行
+        var i = setInterval(function() {
+            if (arrfunc.length === 0) {
+                clearInterval(i);
+                return;
+            }
+            arrfunc.shift()();
+        }, 1000)
+    })
+
+    // 清除textarea的输入内容
+    btnClear.addEventListener('click', function(e) {
+        inputCmds.value = '';
+        changeLineNum(inputCmds.value);
+        clearErrMark();
+        arrCmds = [];
+    })
+
+    // 命令obj
+    var commands = {
+        'go': getFnMove(),
+        'tun lef': getFnRotate(-90),
+        'tun rig': getFnRotate(90),
+        'tun bac': getFnRotate(180),
+        'tra lef': getFnMove(-90),
+        'tra rig': getFnMove(90),
+        'tra top': getFnMove(0),
+        'tra bot': getFnMove(180),
+        'mov lef': getFnMove(-90, true),
+        'mov rig': getFnMove(90, true),
+        'mov top': getFnMove(0, true),
+        'mov bot': getFnMove(180, true),
+    }
+
+    var eleBtns = document.querySelectorAll('#formBtns input');
+    for (var i = 0; i < eleBtns.length; i++) {
+        eleBtns[i].addEventListener('click', commands[eleBtns[i].value.toLowerCase()]);
+    }
+
+    function getBtnByValue(value) {
+        for (var i = 0; i < eleBtns.length; i++) {
+            if (eleBtns[i].value === value.toUpperCase()) {
+                return eleBtns[i];
+            }
+        }
+    }
+
+    function getFnRotate(num) {
+        return function() {
+            game.rotateDia(num);
+        }
+    }
+
+    function getFnMove(deg, change) {
+        return function() {
+            game.moveDia(deg, change);
+        }
+    }
+
+    var Game = function(rowMax, colMax) {
+        this.rowMax = rowMax;
+        this.colMax = colMax;
+        this.table = null;
+        this.dia = {
+            deg: 0,
+            ele: null,
+            pos: null
+        };
+        this.arrWallPos = [];
+        for (var i = 0; i < 30; i++) {
+            var row = Math.ceil(Math.random() * 10),
+                col = Math.ceil(Math.random() * 10);
+            this.arrWallPos.push([row, col]);
+        }
+    }
+
+    Game.prototype = {
+        render: function(container) {
+            if (this.table) {
+                container.removeChild(this.table);
+            }
+
+            var rowRandom = Math.ceil(Math.random() * this.rowMax);
+            var colRandom = Math.ceil(Math.random() * this.colMax);
+
+            var table = document.createElement('table');
+            this.table = table;
+            for (var i = 0; i < this.rowMax + 1; i++) {
+                var tr = document.createElement('tr');
+                for (var j = 0; j < this.colMax + 1; j++) {
+                    var td = document.createElement('td');
+                    if (i === 0 && j === 0) {} else {
+                        if (i === 0) {
+                            td.innerHTML = j;
+                        }
+                        if (j === 0) {
+                            td.innerHTML = i;
+                        }
+                    }
+
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+
+            container.appendChild(table);
+
+            this.createDiaAt(rowRandom, colRandom);
+        },
+
+        createDiaAt: function(row, col) {
+            this.dia.deg = 0;
+            this.dia.pos = [row, col];
+            this.renderDia();
+        },
+
+        renderDia: function() {
+            var row = this.dia.pos[0],
+                col = this.dia.pos[1];
+            this.dia.ele = document.createElement('span');
+            this.dia.ele.innerHTML = '<div></div>';
+            this.dia.ele.style.transform = 'rotate(' + this.dia.deg + 'deg)';
+            this.table.children[row].children[col].appendChild(this.dia.ele);
+        },
+
+        rotateDia: function(degOffset) {
+            this.dia.deg += degOffset;
+            this.dia.deg %= 360;
+            this.dia.ele.style.transform = 'rotate(' + this.dia.deg + 'deg)';
+        },
+
+        moveOne: function(deg, speed) {
+            deg = !isNaN(deg) ? deg : this.dia.deg;
+            deg %= 360;
+
+            if (deg === 0) {
+                if (this.dia.pos[0] > 1) {
+                    this.dia.pos[0]--;
+                }
+            } else if (deg === 90 || deg === -270) {
+                if (this.dia.pos[1] < this.colMax) {
+                    this.dia.pos[1]++;
+                }
+            } else if (deg === 180 || deg === -180) {
+                if (this.dia.pos[0] < this.rowMax) {
+                    this.dia.pos[0]++;
+                }
+            } else if (deg === 270 || deg === -90) {
+                if (this.dia.pos[1] > 1) {
+                    this.dia.pos[1]--;
+                }
+            }
+
+            var row = this.dia.pos[0],
+                col = this.dia.pos[1],
+                ele = this.dia.ele,
+                td = this.table.children[row].children[col];
+            setTimeout(function() {
+                ele.parentElement.removeChild(ele);
+                td.appendChild(ele);
+            }, speed);
+        },
+
+        // deg为指定的移动方向，不指定则用原本的朝向
+        // change表示移动的同时是否改变朝向
+        moveDia: function(deg, change) {
+            // 移动并改变方向的情况
+            var speed = 0;
+            if (!isNaN(deg) && change) {
+                var degOffset = deg - this.dia.deg;
+                this.rotateDia(degOffset);
+                speed = 1000;
+            }
+
+            this.moveOne(deg, speed);
+        },
+
+        checkPos: function(pos) {
+            if (pos[0] < 1 || pos[0] > this.rowMax || pos[1] < 1 || pos[1] > this.colMax) {
+                return false;
+            }
+
+            for (var i = 0; i < this.arrWallPos.length; i++) {
+                var wallPos = this.arrWallPos[i];
+                if (wallPos[0] === pos[0] && wallPos[1] === pos[1]) {
+                    // delete
+                    this.table.children[pos[0]].children[pos[1]].style.backgroundColor = 'black';
+                    return false;
+                }
+            }
+
+            return true;
+        },
+
+        getWayTo: function(pos) {
+            if (!this.checkPos(pos)) {
+                alert('目的地无法到达');
+                return [];
+            }
+
+            var self = this;
+            var arrPos = AStar(this.dia.pos, pos, function(pos) {
+                return self.checkPos(pos);
+            });
+
+            // delete
+            for (var i = 0; i < arrPos.length; i++) {
+                var row = arrPos[i][0],
+                    col = arrPos[i][1];
+                this.table.children[row].children[col].style.color = 'blue';
+            }
+
+            var posEnd = arrPos.pop();
+            var arr = [posEnd];
+            var G = posEnd[2] - 1;
+            while (arrPos.length > 0) {
+                var pos = arrPos.pop();
+                // todo 要修改
+                if (G === pos[2] && (Math.abs(pos[0] - posEnd[0]) === 1 || Math.abs(pos[1] - posEnd[1]) === 1)) {
+                    arr.push(pos);
+                    G--;
+                    posEnd = pos;
+                }
+            }
+
+            // delete
+            for (var i = 0; i < arr.length; i++) {
+                var row = arr[i][0],
+                    col = arr[i][1];
+                this.table.children[row].children[col].style.color = 'red';
+            }
+
+            return arr;
+        }
+    };
+
+    function AStar(posFrom, posTo, fnCheckPos) {
+        function getDis(pos1, pos2) {
+            return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1])
+        }
+
+        function getPos(pos) {
+            var row = pos[0],
+                col = pos[1],
+                g = pos[2];
+            var arrPos = [];
+            arrPos.push([row - 1, col, g + 1]);
+            arrPos.push([row + 1, col, g + 1]);
+            arrPos.push([row, col - 1, g + 1]);
+            arrPos.push([row, col + 1, g + 1]);
+
+            return arrPos;
+        }
+
+        function arrContainsPos(arr, pos) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i][0] == pos[0] && arr[i][1] === pos[1]) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        var arrOpen = [
+                [posFrom[0], posFrom[1], 0]
+            ],
+            arrClose = [];
+
+        do {
+            var min = -1;
+            for (var i = 0; i < arrOpen.length; i++) {
+                var dis = arrOpen[i][2] + getDis(arrOpen[i], posTo);
+                min = (min === -1) ? i : min;
+                var minDis = arrOpen[min][2] + getDis(arrOpen[min], posTo);
+
+                if (dis <= minDis) {
+                    min = i;
+                }
+            }
+
+            var curPos = arrOpen[min];
+            arrClose.push(curPos);
+            arrOpen.splice(min, 1);
+            if (getDis(curPos, posTo) === 0) {
+                // delete
+                for (var i = 0; i < arrClose.length; i++) {
+                    var row = arrClose[i][0],
+                        col = arrClose[i][1];
+                    var num = document.createElement('strong');
+                    num.innerHTML += arrClose[i][2] + '+' +
+                        getDis(arrClose[i], posTo);
+                    game.table.children[row].children[col].appendChild(num);
+                }
+
+                for (var i = 0; i < arrOpen.length; i++) {
+                    var row = arrOpen[i][0],
+                        col = arrOpen[i][1];
+                    var num = document.createElement('strong');
+                    num.innerHTML += arrOpen[i][2] + '+' +
+                        getDis(arrOpen[i], posTo);
+                    game.table.children[row].children[col].appendChild(num);
+                }
+                return arrClose;
+            }
+
+            var arrPos = getPos(curPos);
+            for (var i = 0; i < arrPos.length; i++) {
+                if (arrContainsPos(arrClose, arrPos[i]) >= 0 || !fnCheckPos(arrPos[i])) {
+                    continue;
+                }
+
+                var index = arrContainsPos(arrOpen, arrPos[i])
+                if (index >= 0) {
+                    if (arrPos[i][2] < arrOpen[index][2]) {
+                        arrOpen[index][2] = arrPos[i][2];
+                    }
+                } else {
+                    arrOpen.push(arrPos[i]);
+                }
+            }
+        }
+        while (arrOpen.length > 0);
+
+        return [];
+    }
+
+    var game = new Game(10, 10);
+    game.render(divGame);
+    </script>
+</body>
+
+</html>

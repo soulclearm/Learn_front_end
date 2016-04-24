@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>task21</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+    * {
+        font-size: 25px;
+    }
+    
+    #tagShow b,
+    #hobbyShow b {
+        display: inline-block;
+        padding: 5px;
+        margin: 5px;
+        background-color: rgb(139, 202, 255);
+        color: white;
+    }
+    
+    #tagShow b:hover {
+        background-color: red;
+    }
+    </style>
+</head>
+
+<body>
+    <article id="tags">
+        Tag:
+        <input type="text" placeholder="请输入tag如nodejs" id="tagInput"></input>
+        <div id="tagShow"></div>
+    </article>
+    <hr />
+    <article id="hobbys">
+        <textarea placeholder="请输入兴趣爱好" rows="3" cols="15" id="hobbyInput">1,2，３，4 5 6　７</textarea>
+        <br />
+        <button id="sureHobby">确认兴趣爱好</button>
+        <div id="hobbyShow"></div>
+    </article>
+    <script type="text/javascript">
+    $ = function(el) {
+        return document.querySelector(el);
+    }
+
+    function list(input, show) {
+        this.input = input;
+        this.show = show;
+        this.arr = [];
+        this.maxLen = 10;
+    }
+
+    list.prototype.pushData = function(d) {
+        if (d.length <= 0 || this.arr.indexOf(d) >= 0) {
+            return;
+        }
+        this.arr.push(d);
+        if (this.arr.length > this.maxLen) {
+            this.arr.shift();
+        }
+
+        this.render();
+    };
+
+    list.prototype.deleteData = function(ele) {
+        var idx = [].indexOf.call(this.show.children, ele);
+        this.arr.splice(idx, 1);
+        this.render();
+    };
+
+    list.prototype.render = function() {
+        this.show.innerHTML = this.arr.map(function(d) {
+            return '<b>' + d + '</b>';
+        }).join('');
+    };
+
+    function createList(input, show) {
+        return new list(input, show);
+    }
+
+    var tagInput = $('#tagInput');
+    var tagShow = $('#tagShow');
+    var hobbyInput = $('#hobbyInput');
+    var hobbyShow = $('#hobbyShow');
+    var sureHobby = $('#sureHobby');
+
+    var tagList = createList(tagInput, tagShow),
+        hobbyList = createList(hobbyInput, hobbyShow);
+
+    tagInput.addEventListener('keyup', function(e) {
+        var str = this.value;
+        if (str.match(/[ ,.;　，．；]$/) || e.keyCode === 13) {
+            tagList.pushData(str.trim());
+            tagInput.value = '';
+        }
+    });
+
+    tagShow.addEventListener('mouseover', function(e) {
+        if (e.target.tagName === 'B') {
+            var originHTML = e.target.innerHTML;
+            e.target.innerHTML = '删除' + originHTML;
+            e.target.addEventListener('mouseout', function() {
+                e.target.innerHTML = originHTML;
+            })
+            e.target.addEventListener('click', function() {
+                tagList.deleteData(e.target);
+            })
+        }
+    });
+
+    sureHobby.addEventListener('click', function() {
+        var strHobbys = hobbyInput.value.trim();
+        hobbyInput.value = '';
+        var arr = strHobbys.split(/[ ,.;　，．；、\s\n]+/);
+        for (var i = 0; i < arr.length; i++) {
+            var str = arr[i].trim();
+            hobbyList.pushData(str);
+        }
+    });
+    </script>
+</body>
+
+</html>
