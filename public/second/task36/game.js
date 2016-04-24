@@ -173,7 +173,6 @@ Game.prototype = {
     },
 
     moveRoleTo: function(pos) {
-        console.log('去到' + pos);
         if (pos.isEqual(this.rolePos)) {
             alert('已经在目标地点');
         }
