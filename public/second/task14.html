@@ -34,7 +34,7 @@
         aqiData = aqiData.filter(function(d) {
             return (d[1] > 60);
         }).sort(function(d1, d2) {
-            return d2[1] > d1[1];
+            return d1[1] - d2[1];
         });
 
         var ul = document.getElementById("aqi-list");
