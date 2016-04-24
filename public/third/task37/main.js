@@ -1,20 +1,16 @@
 (function() {
-    var $ = function(el) {
-        return document.querySelector(el);
-    }
-
     var layer = createFloatLayer($('#divFloat'));
     layer.show();
 
-    $('#btnLogin').addEventListener('click', function() {
+    addEvent($('#btnLogin'), 'click', function() {
         layer.show();
     })
 
-    $('#btnSure').addEventListener('click', function() {
+    addEvent($('#btnSure'), 'click', function() {
         layer.hide();
     })
 
-    $('#btnCancel').addEventListener('click', function() {
+    addEvent($('#btnCancel'), 'click', function() {
         layer.hide();
     })
 })()

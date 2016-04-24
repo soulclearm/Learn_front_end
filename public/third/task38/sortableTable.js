@@ -61,7 +61,7 @@ SortableTable.prototype = {
 
             var fn = self.fnGetSort(self.names[index]);
 
-            div.children[0].addEventListener('click', function(e) {
+            addEvent(div.children[0], 'click', function(e) {
                 self.curOrder.sort(function(d1, d2) {
                     return -fn(self.data[d1][index - 1], self.data[d2][index - 1]);
                 })
@@ -69,7 +69,7 @@ SortableTable.prototype = {
                 self.render();
             })
 
-            div.children[1].addEventListener('click', function(e) {
+            addEvent(div.children[1], 'click', function(e) {
                 self.curOrder.sort(function(d1, d2) {
                     return fn(self.data[d1][index - 1], self.data[d2][index - 1]);
                 })

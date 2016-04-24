@@ -1,7 +1,3 @@
-$ = function(el) {
-    return document.querySelector(el);
-}
-
 function randomScore(n) {
     var arr = [];
     var sum = 0;

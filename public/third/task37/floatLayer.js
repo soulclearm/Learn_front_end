@@ -48,13 +48,13 @@ FloatLayer.prototype = {
         document.body.appendChild(this.maskEle);
 
         var self = this;
-        this.maskEle.addEventListener('click', function(e) {
+        addEvent(this.maskEle, 'click', function(e) {
             if (self.maskEle === this) {
                 self.hide();
             }
         })
 
-        this.ele.addEventListener('click', function(e) {
+        addEvent(this.ele, 'click', function(e) {
             e.stopPropagation();
         })
 
@@ -67,17 +67,19 @@ FloatLayer.prototype = {
 
         node.style.cursor = 'move';
 
-        node.addEventListener('mousedown', function(event) {
+        addEvent(node, 'mousedown', function(event) {
             var disX = event.clientX - self.ele.offsetLeft,
                 disY = event.clientY - self.ele.offsetTop;
-            document.onmousemove = function(event) {
+
+            var move = function(event) {
                 self.ele.style.left = event.clientX - disX + "px";
                 self.ele.style.top = event.clientY - disY + "px";
             };
-            document.onmouseup = function() {
-                document.onmousedown = null;
-                document.onmousemove = null;
-            }
+
+            addEvent(document, 'mousemove', move)
+            addEvent(document, 'mouseup', function() {
+                removeEvent(document, 'mousemove', move);
+            })
         });
     }
 };
