@@ -2,7 +2,23 @@ table {
     border-collapse: collapse;
 }
 
+table tr:first-child {
+    background-color: black;
+    color: white;
+}
+
 td {
     border: 2px solid purple;
     padding: 5px 10px;
+    width: 90px;
+    text-align: center;
+}
+
+body {
+    height: 2000px;
+}
+
+#container {
+    padding: 100px;
+    margin: 50px;
 }

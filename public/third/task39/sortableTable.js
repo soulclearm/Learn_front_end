@@ -4,6 +4,7 @@ var SortableTable = function(tableEle, data, names, fnGetSort) {
     this.names = names;
     this.fnGetSort = fnGetSort;
     this.curOrder = null;
+    this.trClone = null;
 
     this.init();
 }
@@ -37,6 +38,7 @@ SortableTable.prototype = {
         this.tableEle.innerHTML = items;
 
         this.addSortEle();
+        this.addLockRow();
     },
 
     addSortEle: function() {
@@ -89,5 +91,39 @@ SortableTable.prototype = {
         }
     },
 
+    addLockRow: function() {
+        var tr = this.tableEle.children[0].children[0];
 
+        this.trClone = this.trClone ? this.trClone : tr.cloneNode(true);
+
+        var self = this;
+
+        function checkPos() {
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop,
+                offsetTop = self.tableEle.offsetTop,
+                offsetHeight = self.tableEle.offsetHeight;
+            if (scrollTop >= offsetTop && scrollTop <= offsetTop + offsetHeight) {
+                var tr1 = self.tableEle.children[0].children[1];
+                if (tr1 !== self.trClone) {
+                    self.tableEle.children[0].insertBefore(self.trClone, tr1);
+
+                    console.assert(self.tableEle.children[0].children.length === 16)
+                }
+
+                tr.style.position = 'fixed';
+                tr.style.top = '0';
+            } else {
+                var tr1 = self.tableEle.children[0].children[1];
+                if (tr1 === self.trClone) {
+                    self.tableEle.children[0].removeChild(self.trClone);
+                }
+
+                tr.style.position = '';
+            }
+        }
+
+        checkPos();
+
+        addEvent(window, 'scroll', checkPos)
+    }
 };
