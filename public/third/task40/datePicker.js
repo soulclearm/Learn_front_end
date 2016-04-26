@@ -36,6 +36,7 @@ DatePicker.prototype = {
         var arrLeft = $('<strong>')
             .html('<-')
             .css('float', 'left')
+            .css('cursor', 'pointer')
             .appendTo(p)
             .click(function() {
                 self.preMonth();
@@ -44,6 +45,7 @@ DatePicker.prototype = {
         var arrRight = $('<strong>')
             .html('->')
             .css('float', 'right')
+            .css('cursor', 'pointer')
             .appendTo(p)
             .click(function() {
                 self.nextMonth()
@@ -71,6 +73,7 @@ DatePicker.prototype = {
         // 日期部分
         for (var i = 0; i < 42; i++) {
             var ele = createEle()
+                .css('cursor', 'pointer')
                 .appendTo(this.mainEle);
         }
 
