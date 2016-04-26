@@ -40,5 +40,3 @@ var getSortFns = function(name) {
 }
 
 var table = new SortableTable($('#tableScore'), scoreData, names, getSortFns);
-
-console.log(new Date())
