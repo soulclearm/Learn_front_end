@@ -41,7 +41,7 @@ DatePicker.prototype = {
             .css('position', 'absolute')
             .css('z-index', '1000')
             .css('top', '40px')
-            // .css('left', '10px')
+            .css('background-color', 'white')
             .css('font-family', '微软雅黑')
             .hide()
             .appendTo(mainDiv);
