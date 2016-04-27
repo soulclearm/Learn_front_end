@@ -1,8 +1,8 @@
 var DatePicker = function(container) {
     this.container = container;
     this.date = new Date();
-    this.mainEle = null;
     this.selectedEle = null;
+    this.selectCall = null;
 
     this.init();
 }
@@ -12,13 +12,29 @@ DatePicker.prototype = {
     days: ['日', '一', '二', '三', '四', '五', '六'],
 
     init: function() {
+        // 日期显示
+        var mainDiv = $('<div>')
+            .css('position', 'relative')
+            .appendTo(this.container);
+
+        var input = $('<input>')
+            .attr('readonly', 'true')
+            .css('text-align', 'center')
+            .css('width', '210px')
+            .css('height', '30px')
+            .appendTo(mainDiv);
+
         // 日历外框
-        this.mainEle = $('<div><div>')
+        var calendarEle = $('<div>')
             .css('width', '350px')
             .css('height', '400px')
             .css('border', '2px solid lightgray')
+            .css('position', 'absolute')
+            .css('top', '40px')
+            // .css('left', '10px')
             .css('font-family', '微软雅黑')
-            .appendTo(this.container);
+            .hide()
+            .appendTo(mainDiv);
 
         var self = this;
 
@@ -29,7 +45,7 @@ DatePicker.prototype = {
             .css('padding', '5px')
             .css('background-color', 'rgb(200,27,1)')
             .css('color', 'white')
-            .appendTo(this.mainEle);
+            .appendTo(calendarEle);
 
         var title = $('<strong>').addClass('title').appendTo(p);
 
@@ -64,7 +80,7 @@ DatePicker.prototype = {
 
         // 固定不变的星期
         for (var i = 0; i < 7; i++) {
-            var el = createEle().html(this.days[i]).appendTo(this.mainEle);
+            var el = createEle().html(this.days[i]).appendTo(calendarEle);
             if (i === 0 || i === 6) {
                 el.css('color', 'rgb(200,17,1)');
             }
@@ -74,14 +90,17 @@ DatePicker.prototype = {
         for (var i = 0; i < 42; i++) {
             var ele = createEle()
                 .css('cursor', 'pointer')
-                .appendTo(this.mainEle);
+                .appendTo(calendarEle);
         }
 
         this.renderByDate(this.date);
 
         // 点选日期事件
         var self = this;
-        this.mainEle.click(function(e) {
+        calendarClicked = function(e) {
+            if (calendarEle.is(':hidden')) {
+                return;
+            }
             if (e.target.nodeName === 'SPAN') {
                 var allSpan = $('span'),
                     index = allSpan.index($(e.target)),
@@ -89,8 +108,23 @@ DatePicker.prototype = {
                 var dat = new Date(self.date);
                 dat.setDate(dat.getDate() + index - selectedIndex);
                 self.selectDate(dat);
+                input.val(self.getSelectedDate());
+                calendarEle.hide();
+                self.selectCall();
             }
+        }
+
+        calendarEle.click(calendarClicked);
+
+        // 点击输入框事件
+        input.click(function(e) {
+            calendarEle.toggle()
         })
+    },
+
+    select: function(fn) {
+        this.selectCall = fn;
+        return this;
     },
 
     nextMonth: function() {

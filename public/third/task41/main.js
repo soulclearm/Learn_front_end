@@ -1,5 +1,4 @@
 new DatePicker($('#container')).select(function() {
-    console.log(this)
     alert('选择了日期' + this.getSelectedDate());
 });
 
