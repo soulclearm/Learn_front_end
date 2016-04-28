@@ -9,8 +9,8 @@ body {
 
 [id*='imgs'] {
     width: 100%;
-    height: 100vh;
-    padding: 5px 0;
+    height: 96vh;
+    margin: 2vh 0;
 }
 
 [id*='imgs'] img {
@@ -30,6 +30,7 @@ body {
 #imgs2 img {
     width: 66.6%;
     position: absolute;
+    top: 0;
 }
 
 #imgs2 img:first-child {
