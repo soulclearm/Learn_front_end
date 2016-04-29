@@ -24,10 +24,10 @@ function setSize() {
         var j = $(imgs5.get(i));
         jParent = j.parent();
         if (i === 1) {
-            j.css('height', jParent.width() * 0.333 + 'px');
+            j.css('height', jParent.width() * 1.0 / 3.0 + 'px');
         }
         if (i === 4) {
-            j.css('height', jParent.height() - jParent.width() * 0.333 + 'px');
+            j.css('height', jParent.height() - jParent.width() * 1.0 / 3.0 + 'px');
         }
     }
 }

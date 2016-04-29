@@ -28,7 +28,7 @@ body {
 }
 
 #imgs2 img {
-    width: 66.6%;
+    width: calc(100% / 3.0 * 2.0);
     position: absolute;
     top: 0;
 }
@@ -41,7 +41,7 @@ body {
 #imgs2 img:last-child {
     clip-path: polygon(0% 0%, 0% 100%, 50% 100%, 100% 0%);
     -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%, 100% 0%);
-    left: 33.3%;
+    left: calc(100% / 3.0);
 }
 
 #imgs3 img:nth-of-type(n + 2) {
@@ -62,40 +62,40 @@ body {
 }
 
 #imgs5 img:nth-of-type(1) {
-    width: 66.6%;
-    height: 66.6%;
+    width: calc(100% / 3.0 * 2.0);
+    height: calc(100% / 3.0 * 2.0);
 }
 
 #imgs5 img:nth-of-type(2) {
-    width: 33.3%;
-    left: 66.6%;
+    width: calc(100% / 3.0);
+    left: calc(100% / 3.0 * 2.0);
 }
 
 #imgs5 img:nth-of-type(3) {
-    width: 33.3%;
-    height: 33.3%;
+    width: calc(100% / 3.0);
+    height: calc(100% / 3.0);
     bottom: 0;
 }
 
 #imgs5 img:nth-of-type(4) {
-    width: 33.3%;
-    height: 33.3%;
-    left: 33.3%;
+    width: calc(100% / 3.0);
+    height: calc(100% / 3.0);
+    left: calc(100% / 3.0);
     bottom: 0;
 }
 
 #imgs5 img:nth-of-type(5) {
-    width: 33.3%;
+    width: calc(100% / 3.0);
     bottom: 0;
     right: 0;
 }
 
 #imgs6 img:nth-of-type(1) {
-    width: 66.6%;
-    height: 66.5%;
+    width: calc(100% / 3.0 * 2.0 - 1px);
+    height: calc(100% / 3.0 * 2.0 - 1px);
 }
 
 #imgs6 img:nth-of-type(n + 2) {
-    width: 33.3%;
-    height: 33.3%;
+    width: calc(100% / 3.0);
+    height: calc(100% / 3.0);
 }
