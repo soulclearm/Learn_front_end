@@ -26,18 +26,53 @@ Gallery.prototype = {
                 .appendTo(this.mainEle);
             this.columns.push(eleCol);
         }
+
+        this.showEle = $('<div>')
+            .css('position', 'fixed')
+            .css('width', window.screen.width)
+            .css('height', window.screen.height)
+            .css('left', '50%')
+            .css('top', '50%')
+            .css('transform', 'translate(-50%,-50%)')
+            .css('background-color', 'rgba(0,0,0,0.8)')
+            .appendTo($(document.body))
+            .hide()
+            .click(function(e) {
+                console.log(e.target)
+                if (e.target === this) {
+                    $(this).hide();
+                }
+            });
+
+        var img = $('<img>')
+            // .css('cursor', 'zoom-out')
+            .css('position', 'absolute')
+            .css('left', '50%')
+            .css('top', '50%')
+            .css('transform', 'translate(-50%,-50%)')
+            .appendTo(this.showEle)
     },
 
     addImage: function(img) {
         var self = this;
         img.css('width', '100%')
+            .css('cursor', 'zoom-in')
             .load(function(e) {
                 var div = $('<div>')
                     .css('width', '100%')
                     .append($(this))
                     .append($("<p style='text-align:center;font-family:黑体;'>picture" + self.index++ + '<p>'))
                     .appendTo(self.getMinHeightColumn())
+            })
+            .click(function() {
+                self.showImage($(this));
             });
+    },
+
+    showImage: function(img) {
+        var imgForShow = this.showEle.find('img');
+        imgForShow.attr('src', img.attr('src'));
+        this.showEle.show();
     },
 
     getMinHeightColumn: function() {
