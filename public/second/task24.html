@@ -10,7 +10,10 @@
         margin: 0;
         padding: 30px;
         min-width: 600px;
-        user-select: none;
+        -webkit-user-select: none;
+           -moz-user-select: none;
+            -ms-user-select: none;
+                user-select: none;
     }
     
     p {
@@ -31,11 +34,15 @@
     }
     
     div {
+        display: -webkit-flex;
+        display: -ms-flexbox;
         display: flex;
         position: relative;
         padding-top: 36px;
         margin: 0;
-        flex: auto;
+        -webkit-flex: auto;
+            -ms-flex: auto;
+                flex: auto;
         min-width: 30px;
     }
     

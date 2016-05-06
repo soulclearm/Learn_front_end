@@ -137,7 +137,8 @@ header {
     position: absolute;
     left: 50%;
     bottom: 20%;
-    transform: translate(-50%, 50%);
+    -webkit-transform: translate(-50%, 50%);
+            transform: translate(-50%, 50%);
     color: #aba6a5;
 }
 

@@ -38,7 +38,9 @@ table tr td:first-child {
     background-color: red;
     position: absolute;
     top: 0;
+    transition: margin 1000ms, -webkit-transform 1000ms;
     transition: transform 1000ms, margin 1000ms;
+    transition: transform 1000ms, margin 1000ms, -webkit-transform 1000ms;
 }
 
 #divGame span div {
