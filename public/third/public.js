@@ -6,6 +6,10 @@ var $$ = function(el) {
     return document.querySelectorAll(el);
 }
 
+var createEle = function(tagName) {
+    return document.createElement(tagName);
+}
+
 // 兼容的事件方法
 function addEvent(ele, event, hanlder) {
     if (ele.addEventListener) {
