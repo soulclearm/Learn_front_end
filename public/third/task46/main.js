@@ -22,7 +22,7 @@ Scene.prototype.addChild = function(node) {
 };
 
 Scene.prototype.update = function(t) {
-    ctx.fillStyle = 'rgb(255,230,205)';
+    ctx.fillStyle = 'rgb(144,133,133)';
     ctx.fillRect(0, 0, game.width, game.height);
 
     for (var i = 0; i < this.children.length; i++) {
@@ -108,18 +108,12 @@ monster.x = game.width / 2;
 monster.y = game.height - 64;
 scene.addChild(monster);
 
-function getRandomSrc(argument) {
-    var randomColor = ('00000' + (Math.random() * 0x1000000 << 0).toString(16)).slice(-6);
-    var src = 'http://placehold.it/64X64/' + randomColor + '/fff';
-    return src;
-}
-
 var wallCount = 20;
 
 function randomWall() {
     scene.children.splice(2, wallCount);
     for (var i = 0; i < wallCount; i++) {
-        var wall = new Sprite(getRandomSrc());
+        var wall = new Sprite('imgs/wall.png');
         wall.x = Math.floor(Math.random() * 10) * game.width / 10;
         wall.y = Math.floor(Math.random() * (game.height / 64)) * 64;
 
@@ -132,7 +126,7 @@ function randomWall() {
         scene.addChild(wall);
     }
 
-    wallCount += 5;
+    wallCount += 3;
 }
 
 randomWall();
@@ -167,7 +161,7 @@ function reset() {
     var heroPos = hero.getPos();
     var monsterPos = monster.getPos();
     if (!AStar(heroPos, monsterPos, posOK)) {
-        reset();
+        alert('恭喜通关');
     }
 }
 
