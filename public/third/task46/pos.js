@@ -59,6 +59,10 @@ Pos.prototype.isEqual = function(pos) {
     return (this.r === pos.r && this.c === pos.c);
 };
 
+Pos.prototype.toString = function(first_argument) {
+    return this.r + ', ' + this.c;
+};
+
 function createPos(r, c) {
     return new Pos(r, c);
 }

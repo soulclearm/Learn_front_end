@@ -58,6 +58,12 @@ function AStar(posStart, posEnd, fnIsPosOK) {
                     arrOpen[index].parent = curPos;
                 }
             } else {
+                if (pos.getG(curPos) > 1) {
+                    if (!fnIsPosOK(createPos(pos.r, curPos.c)) &&
+                        !fnIsPosOK(createPos(curPos.r, pos.c))) {
+                        continue;
+                    }
+                }
                 arrOpen.push(pos);
             }
         }

@@ -29,6 +29,10 @@ Scene.prototype.update = function(t) {
         this.children[i].update(t);
     }
 
+    if (Math.abs(hero.x - monster.x) < 32 && Math.abs(hero.y - monster.y) < 32) {
+        reset();
+    }
+
     var self = this;
     requestAnimationFrame(function(t) {
         self.update(t);
@@ -96,10 +100,76 @@ Sprite.prototype.getPos = function() {
 var scene = new Scene(game);
 
 var hero = new Sprite('imgs/hero.png');
+hero.x = game.width / 2;
 scene.addChild(hero);
 
 var monster = new Sprite('imgs/monster.png')
+monster.x = game.width / 2;
+monster.y = game.height - 64;
 scene.addChild(monster);
+
+function getRandomSrc(argument) {
+    var randomColor = ('00000' + (Math.random() * 0x1000000 << 0).toString(16)).slice(-6);
+    var src = 'http://placehold.it/64X64/' + randomColor + '/fff';
+    return src;
+}
+
+var wallCount = 20;
+
+function randomWall() {
+    scene.children.splice(2, wallCount);
+    for (var i = 0; i < wallCount; i++) {
+        var wall = new Sprite(getRandomSrc());
+        wall.x = Math.floor(Math.random() * 10) * game.width / 10;
+        wall.y = Math.floor(Math.random() * (game.height / 64)) * 64;
+
+        if (Math.abs(hero.x - wall.x) < 32 && Math.abs(hero.y - wall.y) < 32) {
+            continue;
+        }
+        if (Math.abs(monster.x - wall.x) < 32 && Math.abs(monster.y - wall.y) < 32) {
+            continue;
+        }
+        scene.addChild(wall);
+    }
+
+    wallCount += 5;
+}
+
+randomWall();
+
+function posOK(pos) {
+    if (pos.r < 0 || pos.c < 0 || pos.r >= game.height / 64 || pos.c >= game.width / 64) {
+        return false;
+    }
+    for (var i = 0; i < scene.children.length; i++) {
+        if (scene.children[i] === hero || scene.children[i] === monster) {
+            continue;
+        }
+        var wallPos = scene.children[i].getPos();
+        if (pos.isEqual(wallPos)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function reset() {
+    hero.x = game.width / 2;
+    hero.y = 0;
+    hero.interval = -1;
+
+    monster.x = game.width / 2;
+    monster.y = game.height - 64;
+
+    randomWall(2);
+
+    var heroPos = hero.getPos();
+    var monsterPos = monster.getPos();
+    if (!AStar(heroPos, monsterPos, posOK)) {
+        reset();
+    }
+}
 
 function getPosByClick(x, y) {
     var girdWidth = game.clientWidth / 10;
@@ -120,14 +190,12 @@ addEvent(game, 'click', function(e) {
     var targetPos = getPosByClick(x, y);
     var heroPos = hero.getPos();
 
-    var path = AStar(heroPos, targetPos, function(argument) {
-        return true;
-    })
+    var path = AStar(heroPos, targetPos, posOK);
 
     var arrSeq = [];
     for (var i = 0; i < path.length; i++) {
         var temp = getCoordinate(path[i]);
-        arrSeq.push([temp[0], temp[1], 0.2]);
+        arrSeq.push([temp[0], temp[1], 0.25]);
     }
 
     hero.sequence(arrSeq);
