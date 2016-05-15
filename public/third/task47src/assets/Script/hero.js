@@ -2,7 +2,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        oneStepTime: 0.5
+        oneStepTime: 3
     },
 
     // use this for initialization
@@ -21,23 +21,23 @@ cc.Class({
         })
 
         var actions = [];
-        for (var i = 0; i < path.length; i++) {
+        for (var i = 1; i < path.length; i++) {
             var cpos = this.game.getCCPos(path[i].r, path[i].c);
-            cpos.x += this.node.width / 2;
-            cpos.y += this.node.height / 2;
-            var right = cpos.x > this.node.x;
-            actions.push(cc.sequence(
-                cc.callFunc(function () {
-                    if (cpos.x > this.node.x) {
-                        this.node.scaleX = 1;
-                    }
-                    else {
-                        this.node.scaleX = -1;
-                    }
-                }, this),
-                cc.moveTo(this.oneStepTime, cpos)
-            ))
-            // actions.push(cc.moveTo(this.oneStepTime, cpos));
+            actions.push(cc.callFunc(function (node, cpos) {
+                if (cpos.x > this.node.x) {
+                    this.node.scaleX = 1;
+                }
+                if (cpos.x < this.node.x) {
+                    this.node.scaleX = -1;
+                }
+            }, this, cpos));
+            if (i === 1) {
+                actions.push(cc.callFunc(function () {
+                    this.getComponent(cc.Animation).play('heroRun');
+                }, this));
+            }
+            actions.push(cc.moveTo(this.oneStepTime, cpos));
+
         }
         actions.push(cc.callFunc(function () {
             this.getComponent(cc.Animation).play('heroStand');
@@ -45,9 +45,6 @@ cc.Class({
 
         this.node.stopAllActions();
         this.node.runAction(cc.sequence(actions));
-        this.node.runAction(cc.callFunc(function () {
-            this.getComponent(cc.Animation).play('heroRun');
-        }, this))
     },
 
     init: function (game) {

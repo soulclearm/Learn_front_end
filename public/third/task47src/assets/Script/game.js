@@ -5,6 +5,7 @@ cc.Class({
         girdContainer: cc.Node,
         roadPre: cc.Prefab,
         wallPre: cc.Prefab,
+        enermyPre: cc.Prefab,
 
         hero: cc.Node,
         target: cc.Node,
@@ -21,6 +22,7 @@ cc.Class({
 
         this.initWallAndRoad();
         this.initHeroAndTarget();
+        this.initEnermy();
         this.addEvnet();
         this.hero.getComponent('hero').init(this);
     },
@@ -38,15 +40,10 @@ cc.Class({
                     this.arrIsWall.push(true);
                 }
 
-                this.setPosAtGird(gird, i, j);
+                gird.position = this.getCCPos(i, j);
                 gird.parent = this.girdContainer;
             }
         }
-    },
-
-    setPosAtGird: function (node, row, col) {
-        node.x = col * this.girdWidth + node.width / 2 + this.orginPos.x;
-        node.y = row * this.girdHeight + node.height / 2 + this.orginPos.y;
     },
 
     getGirdPos: function (pos) {
@@ -58,7 +55,7 @@ cc.Class({
     },
 
     getCCPos: function (row, col) {
-        return cc.p(col * this.girdWidth + this.orginPos.x, row * this.girdHeight + this.orginPos.y);
+        return cc.p((col + 0.5) * this.girdWidth + this.orginPos.x, (row + 0.5) * this.girdHeight + this.orginPos.y);
     },
 
     initHeroAndTarget: function () {
@@ -74,12 +71,10 @@ cc.Class({
         do {
             do {
                 heroGPos = randomGPos();
-                console.log(heroGPos)
             }
             while (!this.checkPos(heroGPos))
             do {
                 targetGPos = randomGPos();
-                console.log(targetGPos)
             }
             while (!this.checkPos(targetGPos) || targetGPos.isEqual(heroGPos))
 
@@ -89,8 +84,31 @@ cc.Class({
             });
         } while (path.length <= 0)
 
-        this.setPosAtGird(this.hero, heroGPos.r, heroGPos.c);
-        this.setPosAtGird(this.target, targetGPos.r, targetGPos.c);
+        this.hero.position = this.getCCPos(heroGPos.r, heroGPos.c);
+        this.target.position = this.getCCPos(targetGPos.r, targetGPos.c);
+    },
+
+    initEnermy: function () {
+        var self = this;
+        function randomGPos() {
+            var row = Math.floor(Math.random() * self.rowNum),
+                col = Math.floor(Math.random() * self.colNum);
+            var Pos = require('pos');
+            return new Pos(row, col);
+        }
+        for (var i = 0; i < 3; i++) {
+            var enermy = cc.instantiate(this.enermyPre);
+            var gPos;
+            do {
+                gPos = randomGPos();
+            }
+            while (!this.checkPos(gPos) || cc.pDistance(this.hero.position, this.getCCPos(gPos.r, gPos.c)) < 120)
+
+            this.girdContainer.addChild(enermy);
+            enermy.position = this.getCCPos(gPos.r, gPos.c);
+        }
+
+
     },
 
     addEvnet: function () {
@@ -115,7 +133,7 @@ cc.Class({
 
     update: function (dt) {
         var dis = cc.pDistance(this.hero.position, this.target.position);
-        if (dis < 24) {
+        if (dis < 10) {
             this.gameWin();
         }
     },

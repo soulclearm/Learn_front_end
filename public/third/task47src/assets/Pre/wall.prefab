@@ -90,7 +90,9 @@
     "root": {
       "__id__": 1
     },
-    "asset": null,
+    "asset": {
+      "__uuid__": "c58bfd62-b4ff-4711-87cf-5cc85e221297"
+    },
     "fileId": "5ef9fasgFxF765o5uz+XHDF"
   }
 ]

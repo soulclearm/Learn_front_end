@@ -54,6 +54,13 @@ function AStar(posStart, posEnd, fnIsPosOK) {
                 continue;
             }
 
+            if (pos.getG(curPos) > 1) {
+                if (!fnIsPosOK(createPos(pos.r, curPos.c)) &&
+                    !fnIsPosOK(createPos(curPos.r, pos.c))) {
+                    continue;
+                }
+            }
+
             pos.G = curPos.G + pos.getG(curPos);
             pos.parent = curPos;
 
@@ -64,12 +71,6 @@ function AStar(posStart, posEnd, fnIsPosOK) {
                     arrOpen[index].parent = curPos;
                 }
             } else {
-                if (pos.getG(curPos) > 1) {
-                    if (!fnIsPosOK(createPos(pos.r, curPos.c)) &&
-                        !fnIsPosOK(createPos(curPos.r, pos.c))) {
-                        continue;
-                    }
-                }
                 arrOpen.push(pos);
             }
         }
