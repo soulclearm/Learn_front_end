@@ -53,10 +53,13 @@
     "_components": [
       {
         "__id__": 2
+      },
+      {
+        "__id__": 3
       }
     ],
     "_prefab": {
-      "__id__": 3
+      "__id__": 4
     }
   },
   {
@@ -86,11 +89,22 @@
     "_atlas": null
   },
   {
+    "__type__": "824efC1uGpGOKo5fkqw4cLg",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true
+  },
+  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
     },
-    "asset": null,
+    "asset": {
+      "__uuid__": "8bb73ae4-b207-40e9-9104-d27a8997f6e5"
+    },
     "fileId": "99ecbLb9opC9Yh2dXIRe4La"
   }
 ]

@@ -2,7 +2,8 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        oneStepTime: 3
+        oneStepTime: 0.33,
+        blood: cc.Node,
     },
 
     // use this for initialization
@@ -49,6 +50,13 @@ cc.Class({
 
     init: function (game) {
         this.game = game;
-    }
+    },
+
+    die: function () {
+        this.node.stopAllActions();
+        this.getComponent(cc.Animation).play('heroDead');
+        this.blood.active = true;
+        this.blood.getComponent(cc.Animation).play('blood');
+    },
 
 });

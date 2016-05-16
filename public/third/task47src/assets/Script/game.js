@@ -6,6 +6,7 @@ cc.Class({
         roadPre: cc.Prefab,
         wallPre: cc.Prefab,
         enermyPre: cc.Prefab,
+        firePre: cc.Prefab,
 
         hero: cc.Node,
         target: cc.Node,
@@ -13,12 +14,15 @@ cc.Class({
         rowNum: 15,
         colNum: 10,
         arrIsWall: [],
+        enermys: [cc.Node],
     },
 
     onLoad: function () {
         this.orginPos = cc.p(-this.girdContainer.width / 2, -this.girdContainer.height / 2);
         this.girdWidth = this.girdContainer.width / this.colNum;
         this.girdHeight = this.girdContainer.height / this.rowNum;
+
+        this.isOver = false;
 
         this.initWallAndRoad();
         this.initHeroAndTarget();
@@ -98,6 +102,8 @@ cc.Class({
         }
         for (var i = 0; i < 3; i++) {
             var enermy = cc.instantiate(this.enermyPre);
+            enermy.getComponent('enermy').init(this);
+            this.enermys.push(enermy);
             var gPos;
             do {
                 gPos = randomGPos();
@@ -114,9 +120,32 @@ cc.Class({
     addEvnet: function () {
         var self = this;
         this.girdContainer.on('touchend', function (e) {
+            if (self.isOver) {
+                return;
+            }
             var pos = self.girdContainer.convertTouchToNodeSpaceAR(e);
-            self.hero.getComponent('hero').goto(pos);
+
+            var fire = false;
+            for (var i = 0; i < self.enermys.length; i++) {
+                if (self.enermys[i].getBoundingBox().contains(pos)) {
+                    fire = true;
+                }
+            }
+
+            if (fire) {
+                self.createFire(self.hero.position, pos, 'hero');
+            }
+            else {
+                self.hero.getComponent('hero').goto(pos);
+            }
         })
+    },
+
+    createFire: function (startPos, targetPos, type) {
+        var fire = cc.instantiate(this.firePre);
+        fire.getComponent('fire').init(this, cc.pToAngle(cc.pSub(targetPos, startPos)), type);
+        fire.position = startPos;
+        this.girdContainer.addChild(fire);
     },
 
     checkPos: function (girdPos) {
@@ -136,6 +165,11 @@ cc.Class({
         if (dis < 10) {
             this.gameWin();
         }
+    },
+
+    gameOver: function () {
+        this.hero.getComponent('hero').die();
+        this.isOver = true;
     },
 
     gameWin: function () {
